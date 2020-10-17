@@ -1,33 +1,26 @@
 FROM python:3.8
-ENV PYTHONUNBUFFERED 1
 
-##########################################################################
-## Install the container
-## Copy files one by one and split commands to use docker cache
-##########################################################################
+ADD requirements.txt /app/requirements.txt
 
-RUN mkdir /code
-WORKDIR /code
+RUN set -ex \
+    && apk add --no-cache --virtual .build-deps postgresql-dev build-base \
+    && python -m venv /env \
+    && /env/bin/pip install --upgrade pip \
+    && /env/bin/pip install --no-cache-dir -r /app/requirements.txt \
+    && runDeps="$(scanelf --needed --nobanner --recursive /env \
+        | awk '{ gsub(/,/, "\nso:", $2); print "so:" $2 }' \
+        | sort -u \
+        | xargs -r apk info --installed \
+        | sort -u)" \
+    && apk add --virtual rundeps $runDeps \
+    && apk del .build-deps
 
-COPY Pipfile Pipfile.lock /code/
+ADD talentalps /app
+WORKDIR /app
 
-#########################################################################
-## Install packages
-#########################################################################
+ENV VIRTUAL_ENV /env
+ENV PATH /env/bin:$PATH
 
-RUN apt-get update
-RUN apt-get install -y postgresql
-RUN pip install pipenv
-RUN pipenv install --system --dev
-
-#########################################################################
-## Copy everything into the container
-#########################################################################
-
-COPY . /code
-
-#########################################################################
-## Set the entrypoint
-#########################################################################
 EXPOSE 8000
-ENTRYPOINT ["/code/entrypoint.sh"]
+
+CMD ["gunicorn", "--bind", ":8000", "--workers", "3", "talentalps.wsgi:application"]
