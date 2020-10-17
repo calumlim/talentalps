@@ -1,0 +1,9 @@
+__pycache__
+.env
+.DS_Store
+.sass-cache/
+*.sqlite3
+*.map
+.vscode/
+public/
+media/

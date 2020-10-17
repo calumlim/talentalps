@@ -1,0 +1,22 @@
+version: "3.8"
+   
+services:
+  db:
+    image: postgres:9.6
+    environment:
+      - POSTGRES_DB=talentalps
+      - POSTGRES_USER=talentalps
+      - POSTGRES_PASSWORD=talentalps
+  talentalps:
+    build: .
+    volumes: &talentalps_volumes
+      - .:/code
+    ports:
+      - "8000:8000"
+    links: &talentalps_links
+      - db
+    depends_on:
+      - db
+    environment: 
+        # Django Environment Variables
+    command: start_dev
