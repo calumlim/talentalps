@@ -3,11 +3,13 @@ version: "3.8"
 services:
   db:
     image: postgres:9.6
+    hostname: db
     environment:
       - POSTGRES_DB=talentalps
       - POSTGRES_USER=talentalps
       - POSTGRES_PASSWORD=talentalps
   talentalps:
+    restart: always
     build: .
     volumes: &talentalps_volumes
       - .:/code
@@ -17,6 +19,16 @@ services:
       - db
     depends_on:
       - db
-    # environment: 
-        # Django Environment Variables
+    environment: 
+      # Django variables
+      DJANGO_SETTINGS_MODULE: talentalps.settings
+      DEBUG: "True"
+      SECRET_KEY: secret
+      ALLOWED_HOSTS: '*'
+      # Postgres variables
+      DB_NAME: talentalps
+      DB_USER: talentalps
+      DB_PASS: talentalps
+      DB_HOST: db
+      DB_PORT: 5432
     command: start_dev
