@@ -18,14 +18,14 @@ export PYTHONPATH="/code/:$PYTHONPATH"
 case "$1" in
   "start_dev" )
     # run migrations first if theres any && start the dev server
-    python ./mss_mall/manage.py migrate --noinput
-    python ./mss_mall/manage.py runserver 0.0.0.0:8000
+    python ./manage.py migrate --noinput
+    python ./manage.py runserver 0.0.0.0:8000
   ;;
   "test" )
     # linting first
     flake8 ./
     # run python tests and pass on any args e.g individual tests
-    python ./mss_mall/manage.py test "${@:2}"
+    python ./manage.py test "${@:2}"
   ;;
   "fix" )
     # fix all linting errors automagically
@@ -33,12 +33,17 @@ case "$1" in
   ;;
   "test_coverage" )
     # generate test coverage
-    coverage run --source='.' python ./mss_mall/manage.py test
+    coverage run --source='.' python ./manage.py test
     coverage report
   ;;
   "manage" )
     # run django commands
-    python ./mss_mall/manage.py "${@:2}"
+    python ./manage.py "${@:2}"
+  ;;
+  
+  "create_project" )
+    # create django project
+    django-admin startproject "${@:2}" .
   ;;
   * )
     show_help
