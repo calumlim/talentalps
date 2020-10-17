@@ -40,10 +40,14 @@ case "$1" in
     # run django commands
     python ./manage.py "${@:2}"
   ;;
-  
   "create_project" )
     # create django project
     django-admin startproject "${@:2}" .
+  ;;
+  "start_prod" )
+    # run production server
+    python ./manage.py migrate --noinput
+    gunicorn talentalps.wsgi:application --workers 3 -b :8000
   ;;
   * )
     show_help
