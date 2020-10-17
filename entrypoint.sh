@@ -47,7 +47,7 @@ case "$1" in
   "start_prod" )
     # run production server
     python ./manage.py migrate --noinput
-    gunicorn talentalps.wsgi:application --workers 3 -b :8000 -p 80:8000
+    gunicorn talentalps.wsgi --workers 3 -b 0.0.0.0:8000 -p 80:8000
   ;;
   * )
     show_help
