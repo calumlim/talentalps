@@ -145,8 +145,8 @@ AWS_S3_OBJECT_PARAMETERS = {
 AWS_LOCATION = 'static'
 AWS_DEFAULT_ACL = 'public-read'
 
-STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-if AWS_ACCESS_KEY_ID:
+if AWS_ACCESS_KEY_ID != "":
+    STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
     STATIC_URL = '{}/{}/'.format(AWS_S3_ENDPOINT_URL, AWS_LOCATION)
 else:
     STATIC_URL = '/static/'
