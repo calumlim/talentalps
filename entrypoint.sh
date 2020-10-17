@@ -40,6 +40,11 @@ case "$1" in
     # run django commands
     python ./mss_mall/manage.py "${@:2}"
   ;;
+  
+  "create_project" )
+    # create django project
+    django-admin startproject "${@:2}" .
+  ;;
   * )
     show_help
   ;;

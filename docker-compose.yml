@@ -17,6 +17,6 @@ services:
       - db
     depends_on:
       - db
-    environment: 
+    # environment: 
         # Django Environment Variables
     command: start_dev
