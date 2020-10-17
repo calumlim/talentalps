@@ -36,6 +36,7 @@ services:
       STATIC_SECRET_KEY: ""
       STATIC_BUCKET_NAME: ""
       STATIC_ENDPOINT_URL: ""
+      STATIC_QUERYSTRING_AUTH: "False"
       # Logging
       DJANGO_LOGLEVEL: "info"
     command: start_dev
