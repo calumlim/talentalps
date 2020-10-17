@@ -17,7 +17,8 @@ libsass = "*"
 django-compressor = "*"
 django-sass-processor = "*"
 gunicorn = "*"
-django-storages = "==1.7.2"
+django-storages = "*"
+boto3 = "*"
 
 [requires]
 python_version = "3.8"

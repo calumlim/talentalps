@@ -31,4 +31,11 @@ services:
       DB_PASS: talentalps
       DB_HOST: db
       DB_PORT: 5432
+      # DigitalOcean Spaces
+      STATIC_ACCESS_KEY_ID: ""
+      STATIC_SECRET_KEY: ""
+      STATIC_BUCKET_NAME: ""
+      STATIC_ENDPOINT_URL: ""
+      # Logging
+      DJANGO_LOGLEVEL: "info"
     command: start_dev
