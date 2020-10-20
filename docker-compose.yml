@@ -1,4 +1,4 @@
-version: "3.8"
+version: "3"
    
 services:
   db:
@@ -39,4 +39,9 @@ services:
       STATIC_QUERYSTRING_AUTH: "False"
       # Logging
       DJANGO_LOGLEVEL: "info"
+
+      # EMAIL
+      # EMAIL_HOST: ""
+      # EMAIL_HOST_USER: ""
+      # EMAIL_HOST_PASSWORD: ""
     command: start_dev

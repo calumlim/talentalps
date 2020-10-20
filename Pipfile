@@ -19,6 +19,7 @@ django-sass-processor = "*"
 gunicorn = "*"
 django-storages = "*"
 boto3 = "*"
+social-auth-app-django = "*"
 
 [requires]
-python_version = "3.8"
+python_version = "3.7"
