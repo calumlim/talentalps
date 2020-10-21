@@ -14,6 +14,6 @@ class LogInForm(forms.Form):
         username = self.cleaned_data.get('username')
 
         if not User.objects.filter(username=username).exists():
-            raise forms.ValidationError("Username does not exist.")
+            raise forms.ValidationError("Username or password is incorrect.")
         
         return username

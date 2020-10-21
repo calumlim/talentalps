@@ -20,7 +20,7 @@ class LogInView(FormView):
         if user is not None:
             login(self.request, user)
         else:
-            messages.error(self.request, _("Login credentials were incorrect."))
+            messages.error(self.request, _("Username or password is incorrect."))
         return super().form_valid(form)
 
 def LogOut(request):
