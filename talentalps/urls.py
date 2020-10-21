@@ -19,8 +19,11 @@ from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
 
+from user.views import LogInView
+
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('user/', include('user.urls'), name='user'),
+    path('login/', LogInView.as_view(), name='login'),
+    path('user/', include('user.urls')),
     path('social/', include('social_django.urls', namespace='social')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

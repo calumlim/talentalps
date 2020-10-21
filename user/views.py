@@ -12,7 +12,7 @@ from . import forms
 class LogInView(FormView):
     template_name = 'user/login.html'
     form_class = forms.LogInForm
-    success_url = reverse_lazy('user:login')
+    success_url = reverse_lazy('login')
 
     def form_valid(self, form):
         
@@ -28,5 +28,5 @@ def LogOut(request):
 
     messages.info(request, _("You have logged out."))
 
-    return redirect(reverse_lazy('user:login'))
+    return redirect(reverse_lazy('login'))
 
