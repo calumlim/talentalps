@@ -24,7 +24,11 @@ class LogInView(FormView):
     def form_valid(self, form):
         user = authenticate(username=form.cleaned_data.get('username'), password=form.cleaned_data.get('password'))
         if user is not None:
-            login(self.request, user)
+            if user.userprofile.verified:
+                login(self.request, user)
+            else:
+                messages.info(self.request, _("Please verify your account before you log in."))
+                return redirect('login')
         else:
             messages.error(self.request, _("Username or password is incorrect."))
             return super().get(self.request)
