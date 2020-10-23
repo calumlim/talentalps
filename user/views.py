@@ -52,7 +52,8 @@ class ResetPasswordEmailView(FormView):
             logout(self.request)
             self.request.session['email'] = user.email
             self.send_email(user, url)
-        except:
+        except User.DoesNotExist:
+            self.request.session['email'] = email
             pass
         return super().form_valid(form)
     
@@ -85,9 +86,12 @@ class ResetPasswordView(FormView):
         token_generator = PasswordResetTokenGenerator()
 
         self.valid = False
+        self.valid_password = False
 
         if token_generator.check_token(self.user, token):
             self.valid = True
+            if self.user.has_usable_password():
+                self.valid_password = True
         return super().dispatch(request, *args, **kwargs)
 
     def form_valid(self, form):
