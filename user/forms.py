@@ -38,7 +38,7 @@ class ResetPasswordForm(forms.Form):
         if n < 9:
             errors.append('Password needs to be at least 8 characters long.')
 
-        validation_error = "<br>".join(errors)
+        validation_error = "\n".join(errors)
 
         if errors:
             raise forms.ValidationError(validation_error)
