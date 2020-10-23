@@ -26,4 +26,5 @@ urlpatterns = [
     path('login/', LogInView.as_view(), name='login'),
     path('user/', include('user.urls')),
     path('social/', include('social_django.urls', namespace='social')),
+    path('registration/', include('registration.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

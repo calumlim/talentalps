@@ -49,7 +49,9 @@ INSTALLED_APPS = [
     'social_django',
 
     # Project apps
+    'talentalps',
     'user',
+    'registration',
 ]
 
 MIDDLEWARE = [

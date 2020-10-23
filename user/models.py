@@ -6,9 +6,9 @@ from talentalps.models import BaseModel
 from talentalps import constants
 
 def get_avatar_image_path(instance, filename):
-    return f"{instance.userprofile.user.username}/avatar/{filename}"
+    return f"{instance.user.username}/avatar/{filename}"
 def get_header_image_path(instance, filename):
-    return f"{instance.userprofile.user.username}/header/{filename}"
+    return f"{instance.user.username}/header/{filename}"
 def get_company_avatar_image_path(instance, filename):
     return f"employer/company/{instance.company_name}/avatar/{filename}"
 def get_company_header_image_path(instance, filename):
@@ -22,6 +22,9 @@ class UserProfile(BaseModel):
     state = models.CharField(_('state'), max_length=100, null=True, blank=True, choices=constants.STATE)
     contact = models.CharField(_('contact'), max_length=15, null=True, blank=True)
     is_employer = models.BooleanField(_('is employer'), default=False)
+    avatar = models.ImageField(_('avatar'), upload_to=get_avatar_image_path, null=True, blank=True)
+    header = models.ImageField(_('header'), upload_to=get_header_image_path, null=True, blank=True)
+    verified = models.BooleanField(_("verified"), default=False)
 
     user = models.OneToOneField(User, on_delete=models.PROTECT)
 
@@ -35,10 +38,8 @@ class Candidate(BaseModel):
 
     gender = models.CharField(_('gender'), max_length=10, choices=constants.GENDER)
     nationality = models.CharField(_('nationality'), max_length=50, choices=constants.COUNTRY, default='MY')
-    description = models.TextField(_('description'), max_length=1200)
+    description = models.TextField(_('description'), max_length=1200, null=True, blank=True)
     seeking_status = models.CharField(_('seeking status'), max_length=50, choices=SEEKING_CHOICES)
-    avatar = models.ImageField(_('avatar'), upload_to=get_avatar_image_path)
-    header = models.ImageField(_('header'), upload_to=get_header_image_path)
     boost = models.BooleanField(_('boost'), default=False)
 
     userprofile = models.OneToOneField('UserProfile', on_delete=models.PROTECT)
@@ -80,14 +81,14 @@ class Company(BaseModel):
         (TYPE_FOREIGN, 'Foreign Company'),
     )
 
-    avatar = models.ImageField(_('avatar'), upload_to=get_company_avatar_image_path)
+    avatar = models.ImageField(_('avatar'), upload_to=get_company_avatar_image_path, null=True, blank=True)
     company_name = models.CharField(_('company_name'), max_length=150)
     description = models.TextField(_('description'), max_length=1200)
     website = models.CharField(_('website'), max_length=1000)
     company_size = models.CharField(_("company size"), max_length=50, choices=SIZE_CHOICES)
     company_type = models.CharField(_("type"), max_length=50, choices=TYPE_CHOICES)
     founded = models.CharField(_("founded"), max_length=5)
-    header_image = models.ImageField(_("header image"), height_field=None, width_field=None, max_length=None, upload_to=get_company_header_image_path)
+    header_image = models.ImageField(_("header image"), height_field=None, width_field=None, max_length=None, upload_to=get_company_header_image_path, null=True, blank=True)
     industry = models.CharField(_("industry"), max_length=150, choices=constants.INDUSTRY)
     other_industry = models.CharField(_("other industry"), max_length=100, null=True, blank=True)
 

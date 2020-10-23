@@ -1,0 +1,21 @@
+{% extends "./login-base.html" %}
+{% load widget_tweaks %}
+
+{% block title %}Password Reset{% endblock title %}
+
+{% block content %}
+<h1>Password Reset</h1>
+<p>Enter your new password.</p>
+{% if view.valid %}
+    Thank you for verifying your account, your adventure starts here!
+    {% if user.userprofile.is_employer %}
+        <a href="{% url 'login' %}">Login</a>
+    {% else %}
+        <a href="{% url 'employer:login' %}">Login</a>
+    {% endif %}
+{% else %}
+    Link has expired.
+{% endif %}
+
+
+{% endblock content %}

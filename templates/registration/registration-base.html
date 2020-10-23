@@ -1,0 +1,25 @@
+{% load static %}
+{% load widget_tweaks %}
+
+<header>
+    <title>{% block title %}{% endblock title %} | TalentAlps</title>
+</header>
+
+
+{% if messages %}
+    {% for message in messages %}
+    <p>{{ message }}</p>      
+    {% endfor %}
+{% endif %}
+{{ request.messages }}
+
+{% if request.user.username %}
+Logged in as {{ request.user.username }}
+{% endif %}
+
+
+{% block content %}
+{% endblock content %}
+
+{% block footer_js %}
+{% endblock footer_js %}

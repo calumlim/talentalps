@@ -1,0 +1,11 @@
+Dear {{ user.username }},
+
+Congratulations on creating your account! You are only 1 step away from greatness!
+Click on the button below to activate your account.
+
+{{ activation_url }}
+
+Please do not share this link with anybody else.
+
+All the best in your job search!
+- TalentAlps
