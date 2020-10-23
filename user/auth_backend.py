@@ -11,7 +11,10 @@ class UserProfileBackend(ModelBackend):
     def authenticate(self, request, username=None, password=None):
         try:
             with transaction.atomic():
-                user = User._default_manager.get_by_natural_key(username)
+                try:
+                    user = User._default_manager.get_by_natural_key(username)
+                except:
+                    user = User.objects.get(email=username)
                 if user.check_password(password) and self.user_can_authenticate(user):
                     if not UserProfile.objects.filter(user=user).exists():
                         userprofile = UserProfile.objects.create(user=user)
