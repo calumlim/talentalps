@@ -16,12 +16,16 @@ class EmployerLoginView(FormView):
         user = authenticate(username=form.cleaned_data.get('username'), password=form.cleaned_data.get('password'))
 
         if user is not None:
-            login(self.request, user)
             if user.userprofile.is_employer:
-                return super().form_valid(form)
+                if user.userprofile.verified:
+                    login(self.request, user)
+                    return super().form_valid(form)
+                else:
+                    messages.info(self.request, _("Please verify your account before you log in."))
+                    return super().get(self.request)
             else:
                 return redirect('login')
 
         else:
             messages.error(self.request, _("Username or password is incorrect."))
-        return super().form_valid(form)
+        return super().get(self.request)
