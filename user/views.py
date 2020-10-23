@@ -27,6 +27,7 @@ class LogInView(FormView):
             login(self.request, user)
         else:
             messages.error(self.request, _("Username or password is incorrect."))
+            return super().get(self.request)
         return super().form_valid(form)
 
 def LogOut(request):

@@ -73,9 +73,9 @@ class CandidateRegisterView(FormView):
                     return super().form_valid(form)
             except:
                 messages.error(self.request, _("Something went wrong, please try again."))
-                return super().get(self.request, *args, **kwargs)
+                return super().get(self.request)
         else:
-            return super().get(self.request, *args, **kwargs)
+            return super().form_invalid(candidate_form)
     
 
 class EmployerRegisterView(FormView):
@@ -110,7 +110,7 @@ class EmployerRegisterView(FormView):
                 return super().form_valid(form)
         except:
             messages.error(self.request, _("Something went wrong, please try again."))
-            return super().get(self.request, *args, **kwargs)
+            return super().get(self.request)
 
 
 class UserEmailVerificationView(TemplateView):
