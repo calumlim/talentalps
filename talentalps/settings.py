@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     # Project apps
     'talentalps',
     'user',
+    'employer',
     'registration',
 ]
 

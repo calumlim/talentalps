@@ -1,0 +1,23 @@
+{% extends "./employer-base.html" %}
+{% load widget_tweaks %}
+
+{% block title %}Login{% endblock title %}
+
+{% block content %}
+<h1>Employer Login, proffessional sikit</h1>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.username.errors }}
+    {{ form.password.errors }}
+
+    <label for="username">Username:</label>
+    {% render_field form.username %}
+    <label for="password">Password:</label>
+    {% render_field form.password %}
+
+    <button type="submit">Login</button>
+</form>
+
+<a href="{% url 'user:reset-password-email' %}">Forgot Password</a>
+{% endblock content %}
