@@ -20,6 +20,7 @@ class UserProfile(BaseModel):
     address = models.CharField(_('address'), max_length=200, null=True, blank=True)
     postcode = models.PositiveIntegerField(_('postcode'), null=True, blank=True)
     state = models.CharField(_('state'), max_length=100, null=True, blank=True, choices=constants.STATE)
+    country = models.CharField(_("country"), max_length=50, null=True, blank=True, choices=constants.COUNTRY)
     contact = models.CharField(_('contact'), max_length=15, null=True, blank=True)
     is_employer = models.BooleanField(_('is employer'), default=False)
     avatar = models.ImageField(_('avatar'), upload_to=get_avatar_image_path, null=True, blank=True)
@@ -27,6 +28,12 @@ class UserProfile(BaseModel):
     verified = models.BooleanField(_("verified"), default=False)
 
     user = models.OneToOneField(User, on_delete=models.PROTECT)
+
+    def __str__(self):
+        if self.name:
+            return self.name
+        else:
+            return self.user.username
 
 class Candidate(BaseModel):
     SEEKING_ACTIVE = 'active'
@@ -37,6 +44,7 @@ class Candidate(BaseModel):
     )
 
     gender = models.CharField(_('gender'), max_length=10, choices=constants.GENDER)
+    state = models.CharField(_('state'), max_length=100, choices=constants.STATE)
     nationality = models.CharField(_('nationality'), max_length=50, choices=constants.COUNTRY, default='MY')
     description = models.TextField(_('description'), max_length=1200, null=True, blank=True)
     seeking_status = models.CharField(_('seeking status'), max_length=50, choices=SEEKING_CHOICES)
