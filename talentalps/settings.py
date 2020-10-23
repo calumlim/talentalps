@@ -62,10 +62,10 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-AUTHENTICATION_BACKENDS = (
+AUTHENTICATION_BACKENDS = [
+    'user.auth_backend.UserProfileBackend',
     'social_core.backends.google.GoogleOAuth2',
-    'django.contrib.auth.backends.ModelBackend',
-)
+]
 
 LOGIN_URL = '/auth/login/google-oauth2/'
 LOGIN_REDIRECT_URL = '/'
