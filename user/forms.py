@@ -7,16 +7,7 @@ class LogInForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
         self.fields['username'].help_text = None
-    
-    def clean_username(self):
-        username = self.cleaned_data.get('username')
-
-        if not User.objects.filter(username=username).exists():
-            raise forms.ValidationError("Username or password is incorrect.")
-        
-        return username
 
 class ResetPasswordEmailForm(forms.Form):
     email = forms.EmailField(max_length=100, required=True)
