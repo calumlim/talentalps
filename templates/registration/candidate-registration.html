@@ -33,6 +33,22 @@
     {% render_field form.contact %}
     {{ form.contact.errors }}
 
+    <label for="gender">Gender:</label>
+    {% render_field candidate_form.gender %}
+    {{ candidate_form.gender.errors }}
+
+    <label for="state">State:</label>
+    {% render_field form.state %}
+    {{ form.state.errors }}
+
+    <label for="country">Country:</label>
+    {% render_field form.country %}
+    {{ form.country.errors }}
+
+    <label for="seeking status">Seeking Status:</label>
+    {% render_field candidate_form.seeking_status %}
+    {{ candidate_form.seeking_status.errors }}
+
     <button type="submit">Register</button>
 </form>
 

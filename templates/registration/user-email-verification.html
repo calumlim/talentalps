@@ -1,13 +1,16 @@
-{% extends "./login-base.html" %}
+{% extends "./registration-base.html" %}
 {% load widget_tweaks %}
 
-{% block title %}Password Reset{% endblock title %}
+{% block title %}Account Activation{% endblock title %}
 
 {% block content %}
-<h1>Password Reset</h1>
-<p>Enter your new password.</p>
+<h1>Account Activation</h1>
 {% if view.valid %}
-    Thank you for verifying your account, your adventure starts here!
+    {% if view.verified %}
+        Account has already been verified previously, please log in using your registered credentials.
+    {% else %}
+        Thank you for verifying your account, your adventure starts here!
+    {% endif %}
     {% if user.userprofile.is_employer %}
         <a href="{% url 'login' %}">Login</a>
     {% else %}

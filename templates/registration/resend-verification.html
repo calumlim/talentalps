@@ -1,0 +1,19 @@
+{% extends "./registration-base.html" %}
+{% load widget_tweaks %}
+
+{% block title %}Resend Verification Email{% endblock title %}
+
+{% block content %}
+<h1>Resend Verification Email</h1>
+
+<form method="post">
+    {% csrf_token %}
+    
+    <label for="email">Email:</label>
+    {% render_field form.email %}
+    {{ form.email.errors }}
+
+    <button type="submit">Resend</button>
+</form>
+
+{% endblock content %}

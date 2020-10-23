@@ -1,7 +1,7 @@
 {% extends "./registration-base.html" %}
 {% load widget_tweaks %}
 
-{% block title %}Register{% endblock title %}
+{% block title %}Employer Register{% endblock title %}
 
 {% block content %}
 <h1>Employer Registration</h1>
@@ -32,6 +32,14 @@
     <label for="contact">Contact:</label>
     {% render_field form.contact %}
     {{ form.contact.errors }}
+
+    <label for="state">State:</label>
+    {% render_field form.state %}
+    {{ form.state.errors }}
+
+    <label for="country">Country:</label>
+    {% render_field form.country %}
+    {{ form.country.errors }}
 
     <button type="submit">Register</button>
 </form>

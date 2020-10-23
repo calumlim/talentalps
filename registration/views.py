@@ -8,20 +8,22 @@ from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.core import mail
 from django.template.loader import render_to_string
 from django.contrib import messages
+from django.conf import settings
 
 from user.models import UserProfile, Candidate
 from . import forms
+from user.forms import ResetPasswordEmailForm
 
 User = get_user_model()
 
-def send_verification_email(user, url):
+def send_verification_email(user, url, request):
     context = {
         'user': user,
         'activation_url': url,
     }
 
-    message = render_to_string("emails/email-verification.txt", context=context, request=self.request)
-    html_message = render_to_string("emails/email-verification.html", context=context, request=self.request)
+    message = render_to_string("emails/email-verification.txt", context=context, request=request)
+    html_message = render_to_string("emails/email-verification.html", context=context, request=request)
 
     subject = 'Verify your account! - TalentAlps'
     from_email = settings.DEFAULT_FROM_EMAIL
@@ -44,36 +46,40 @@ class CandidateRegisterView(FormView):
         candidate_form = forms.CandidateRegisterForm(self.request.POST)
         if candidate_form.is_valid():
             # Create User, UserProfile, Candidate models
-            try:
-                with transaction.atomic():
-                    user = User.objects.create(
-                        username=form.cleaned_data.get('username'),
-                        email=form.cleaned_data.get('email'),
-                        first_name=form.cleaned_data.get('name')
-                    )
-                    user.set_password(form.cleaned_data.get('password'))
-                    user.save()
+            # try:
+            #     with transaction.atomic():
+            user = User.objects.create(
+                username=form.cleaned_data.get('username'),
+                email=form.cleaned_data.get('email'),
+                first_name=form.cleaned_data.get('name')
+            )
+            user.set_password(form.cleaned_data.get('password'))
+            user.save()
 
-                    userprofile = UserProfile.objects.create(
-                        name=form.cleaned_data.get('name'),
-                        contact=form.cleaned_data.get('contact'),
-                        user=user
-                    )
+            userprofile = UserProfile.objects.create(
+                name=form.cleaned_data.get('name'),
+                contact=form.cleaned_data.get('contact'),
+                state=form.cleaned_data.get('state'),
+                country=form.cleaned_data.get('country'),
+                user=user
+            )
 
-                    candidate = candidate_form.save(commit=False)
-                    candidate.userprofile = userprofile
-                    candidate.save()
+            candidate = candidate_form.save(commit=False)
+            candidate.state = form.cleaned_data.get('state')
+            candidate.nationality = form.cleaned_data.get('country')
+            candidate.userprofile = userprofile
+            candidate.save()
 
-                    token_generator = PasswordResetTokenGenerator()
-                    token = token_generator.make_token(user)
-                    url = self.request.build_absolute_uri(reverse('registration:email-verify', args=(user.pk, token)))
+            token_generator = PasswordResetTokenGenerator()
+            token = token_generator.make_token(user)
+            url = self.request.build_absolute_uri(reverse('registration:email-verify', args=(user.pk, token)))
 
-                    send_verification_email(user, url)
-                    messages.info(self.request, _(f"A verification email has been sent to - {user.email}, you must verify your account before you can log in."))
-                    return super().form_valid(form)
-            except:
-                messages.error(self.request, _("Something went wrong, please try again."))
-                return super().get(self.request)
+            send_verification_email(user, url, self.request)
+            messages.info(self.request, _(f"A verification email has been sent to - {user.email}, you must verify your account before you can log in."))
+            return super().form_valid(form)
+            # except:
+            #     messages.error(self.request, _("Something went wrong, please try again."))
+            #     return super().get(self.request)
         else:
             return super().form_invalid(candidate_form)
     
@@ -98,6 +104,8 @@ class EmployerRegisterView(FormView):
                     name=form.cleaned_data.get('name'),
                     contact=form.cleaned_data.get('contact'),
                     is_employer=True,
+                    state=form.cleaned_data.get('state'),
+                    country=form.cleaned_data.get('country'),
                     user=user
                 )
 
@@ -105,7 +113,7 @@ class EmployerRegisterView(FormView):
                 token = token_generator.make_token(user)
                 url = self.request.build_absolute_uri(reverse('registration:email-verify', args=(user.pk, token)))
 
-                send_verification_email(user, url)
+                send_verification_email(user, url, self.request)
                 messages.info(self.request, _(f"A verification email has been sent to - {user.email}, you must verify your account before you can log in."))
                 return super().form_valid(form)
         except:
@@ -122,9 +130,30 @@ class UserEmailVerificationView(TemplateView):
         url_token = self.kwargs.get('token')
         
         self.valid = False
+        self.verified = False
 
-        if token_generator.check_token(user, url_token):
+        if token_generator.check_token(self.user, url_token):
             self.valid = True
+            if self.user.userprofile.verified:
+                self.verified = True
             self.user.userprofile.verified = True
             self.user.userprofile.save()
         return super().get(request, *args, **kwargs)
+
+class ResendVerificationEmail(FormView):
+    template_name = 'registration/resend-verification.html'
+    form_class = ResetPasswordEmailForm
+    success_url = reverse_lazy('login')
+
+    def form_valid(self, form):
+        messages.info(self.request, _(f"Verification email has been sent to - {form.cleaned_data.get('email')}, please check your inbox."))
+        try:
+            user = User.objects.get(email=form.cleaned_data.get('email'))
+            if not user.userprofile.verified:
+                token_generator = PasswordResetTokenGenerator()
+                token = token_generator.make_token(user)
+                url = self.request.build_absolute_uri(reverse('registration:email-verify', args=(user.pk, token)))
+                send_verification_email(user, url, self.request)
+        except User.DoesNotExist:
+            return super().form_valid(form)
+        return super().form_valid(form)
