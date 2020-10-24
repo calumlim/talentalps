@@ -77,7 +77,7 @@ class Questionnaire(BaseModel):
 
     joblisting = models.OneToOneField("JobListing", verbose_name=_("job listing"), on_delete=models.CASCADE)
 
-class Questions(BaseModel):
+class Question(BaseModel):
     question = models.TextField(_("question"), max_length=300)
 
     questionnaire = models.ForeignKey("Questionnaire", verbose_name=_("questionnaire"), on_delete=models.CASCADE)

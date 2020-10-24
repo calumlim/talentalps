@@ -1,0 +1,10 @@
+{% extends "./employer-base.html" %}
+{% load widget_tweaks %}
+
+{% block title %}Dashboard{% endblock title %}
+
+{% block content %}
+<h1>Employer Dashboard</h1>
+
+<a href="{% url 'user:logout' %}">Logout</a>
+{% endblock content %}

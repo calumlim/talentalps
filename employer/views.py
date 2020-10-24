@@ -1,11 +1,13 @@
 from django.shortcuts import render, redirect
-from django.views.generic import FormView
+from django.views.generic import FormView, TemplateView
 from django.contrib.auth import authenticate, login
 from django.urls import reverse, reverse_lazy
 from django.utils.translation import ugettext_lazy as _
 from django.contrib import messages
 
 from user.forms import LogInForm
+from user import mixins
+
 # Create your views here.
 class EmployerLoginView(FormView):
     template_name = 'employer/login.html'
@@ -25,3 +27,6 @@ class EmployerLoginView(FormView):
         else:
             messages.error(self.request, _("Username or password is incorrect."))
         return super().get(self.request)
+
+class EmployerDashboardView(mixins.EmployerAccessMixin, TemplateView):
+    template_name = 'employer/dashboard.html'

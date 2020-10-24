@@ -6,4 +6,5 @@ from . import views
 app_name = 'employer'
 urlpatterns = [
     path('login/', views.EmployerLoginView.as_view(), name='login'),
+    path('dashboard/', views.EmployerDashboardView.as_view(), name='dashboard'),
 ]
