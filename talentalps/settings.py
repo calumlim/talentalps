@@ -224,6 +224,8 @@ SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = config('SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET')
 # CKEDITOR SETTINGS
 CKEDITOR_CONFIGS = {
     'job_listing_editor': {
-        'toolbar': 'Basic',
+        'toolbar': [["Bold", "Italic", "Strike"],
+                ['NumberedList', 'BulletedList', "Indent", "Outdent", 'JustifyBlock'],
+                ["SectionLink", "Subscript", "Superscript"], ['Undo', 'Redo']],
     },
 }
