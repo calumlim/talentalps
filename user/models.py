@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
+from django.contrib.postgres.fields import ArrayField
 
 from django.contrib.auth.models import User
 from talentalps.models import BaseModel
@@ -34,6 +35,11 @@ class UserProfile(BaseModel):
             return self.name
         else:
             return self.user.username
+    
+class SearchHistory(BaseModel):
+    history = ArrayField(ArrayField(models.CharField(_("history"), max_length=100, blank=True, null=True)), null=True, blank=True)
+
+    user = models.OneToOneField("UserProfile", verbose_name=_("user profile"), on_delete=models.CASCADE)
 
 class Candidate(BaseModel):
     SEEKING_ACTIVE = 'active'
