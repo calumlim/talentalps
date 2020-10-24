@@ -1,0 +1,11 @@
+{% extends "./base.html" %}
+{% load widget_tweaks %}
+
+{% block title %}Jobs in Malaysia - Talent Recruitment{% endblock title %}
+
+{% block content %}
+<h1>WELCOME TO TALENTALPS MADAFAKA</h1>
+
+<a href="{% url 'login' %}">Login</a>
+<a href="{% url 'employer:login' %}">Employer Login</a>
+{% endblock content %}

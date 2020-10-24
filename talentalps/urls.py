@@ -22,6 +22,7 @@ from django.conf.urls.static import static
 from user.views import LogInView
 
 urlpatterns = [
+    path('', include('cms.urls')),
     path('admin/', admin.site.urls),
     path('login/', LogInView.as_view(), name='login'),
     path('user/', include('user.urls')),
