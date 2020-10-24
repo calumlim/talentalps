@@ -39,7 +39,11 @@ class UserProfile(BaseModel):
 class SearchHistory(BaseModel):
     history = ArrayField(ArrayField(models.CharField(_("history"), max_length=100, blank=True, null=True)), null=True, blank=True, size=10)
 
-    user = models.OneToOneField("UserProfile", verbose_name=_("user profile"), on_delete=models.CASCADE)
+    userprofile = models.OneToOneField("UserProfile", verbose_name=_("user profile"), on_delete=models.CASCADE)
+
+class SavedItem(BaseModel):
+    joblisting = models.ForeignKey("job.JobListing", verbose_name=_("job listing"), on_delete=models.CASCADE)
+    userprofile = models.ForeignKey("UserProfile", verbose_name=_("user profile"), on_delete=models.CASCADE)
 
 class Candidate(BaseModel):
     SEEKING_ACTIVE = 'active'
