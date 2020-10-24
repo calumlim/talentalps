@@ -20,7 +20,7 @@ gunicorn = "*"
 django-storages = "*"
 boto3 = "*"
 social-auth-app-django = "*"
-django-ckeditor = "==5.3.1"
+django-ckeditor = "==5.6.1"
 celery = "==5.0"
 
 [requires]
