@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'employer',
     'registration',
     'job',
+    'notifications',
 ]
 
 MIDDLEWARE = [
