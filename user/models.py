@@ -37,7 +37,7 @@ class UserProfile(BaseModel):
             return self.user.username
     
 class SearchHistory(BaseModel):
-    history = ArrayField(ArrayField(models.CharField(_("history"), max_length=100, blank=True, null=True)), null=True, blank=True)
+    history = ArrayField(ArrayField(models.CharField(_("history"), max_length=100, blank=True, null=True)), null=True, blank=True, size=10)
 
     user = models.OneToOneField("UserProfile", verbose_name=_("user profile"), on_delete=models.CASCADE)
 
