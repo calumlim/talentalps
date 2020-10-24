@@ -47,12 +47,14 @@ INSTALLED_APPS = [
     'storages',
     'boto3',
     'social_django',
+    'ckeditor',
 
     # Project apps
     'talentalps',
     'user',
     'employer',
     'registration',
+    'job',
 ]
 
 MIDDLEWARE = [
@@ -217,3 +219,10 @@ DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default="TalentAlps Team <nore
 # Social Auths
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = config('SOCIAL_AUTH_GOOGLE_OAUTH2_KEY')
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = config('SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET')
+
+# CKEDITOR SETTINGS
+CKEDITOR_CONFIGS = {
+    'job_listing_editor': {
+        'toolbar': 'Basic',
+    },
+}

@@ -1,3 +1,20 @@
+LEVEL = (
+    ('internship', 'Internship'),
+    ('entry', 'Entry Level'),
+    ('associate', 'Associate Level'),
+    ('senior', 'Senior Level'),
+    ('director', 'Director Level'),
+    ('executive', 'Executive Level')
+)
+
+EMPLOYMENT_TYPE_CHOICES = (
+    ('full', 'Full time'),
+    ('part', 'Part time'),
+    ('fixed', 'Fixed term'),
+    ('contract', 'Contract'),
+    ('intern', 'Internship'),
+)
+
 STATE = (
     ('johor', 'Johor'),
     ('kedah', 'Kedah'),

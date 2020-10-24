@@ -27,5 +27,6 @@ urlpatterns = [
     path('user/', include('user.urls')),
     path('social/', include('social_django.urls', namespace='social')),
     path('registration/', include('registration.urls')),
-    path('employer/', include('employer.urls'))
+    path('employer/', include('employer.urls')),
+    path('jobs/', include('job.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
