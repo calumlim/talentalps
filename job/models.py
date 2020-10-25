@@ -27,7 +27,8 @@ class JobListing(BaseModel):
     keywords = ArrayField(ArrayField(models.CharField(_("keywords"), max_length=80)), size=10)
     recommended = models.BooleanField(_("recommended"), default=False)
     recommended_start_timestamp: models.DateTimeField(_("recommended start timestamp"), auto_now=False, auto_now_add=False, null=True, blank=True)
-    views: models.PositiveIntegerField(_("views"))
+    views = models.PositiveIntegerField(_("views"))
+    expired = models.BooleanField(_("expired"), default=False)
 
     company = models.ForeignKey("user.Company", verbose_name=_("company"), on_delete=models.CASCADE)
 
