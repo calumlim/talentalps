@@ -27,6 +27,7 @@ class UserProfile(BaseModel):
     avatar = models.ImageField(_('avatar'), upload_to=get_avatar_image_path, null=True, blank=True)
     header = models.ImageField(_('header'), upload_to=get_header_image_path, null=True, blank=True)
     verified = models.BooleanField(_("verified"), default=False)
+    receive_updates = models.BooleanField(_("receive updates"), default=False)
 
     user = models.OneToOneField(User, on_delete=models.PROTECT)
 

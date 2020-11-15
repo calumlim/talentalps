@@ -1,48 +1,175 @@
-{% extends "./registration-base.html" %}
+{% extends "../base.html" %}
+{% load static %}
 {% load widget_tweaks %}
 
-{% block title %}Employer Register{% endblock title %}
+{% block title %}
+Employer Registration
+{% endblock title %}
+
+{% block page_css %}
+  <link rel="stylesheet" href="">
+{% endblock page_css %}
 
 {% block content %}
-<h1>Employer Registration</h1>
+<section class="vh-100">
+    <div class="row vh-100 mr-0 justify-content-center justify-content-md-start">
+        <div class="col-0 col-md-6 d-md-block d-none border-right">
+            <div class="container">
+                <!-- Background graphics -->
+                <div class="position-absolute bottom--5">
+                    <img src="{% static 'cms-assets/img/credentials/credentials-graphic-1.svg' %}" alt="TalentAlps Registration" style="height: 20vw;" class="ml-3">
+                </div>
+                <div class="position-absolute right-0 top--5">
+                    <img src="{% static 'cms-assets/img/credentials/credentials-graphic-2.svg' %}" alt="TalentAlps Registration" style="height: 20vw;" class="mr-5">
+                </div>
 
-<form method="post">
-    {% csrf_token %}
-    
-    <label for="username">Username:</label>
-    {% render_field form.username %}
-    {{ form.username.errors }}
+                <!-- Employer Account Information -->
+                <div class="px-5 pt-3 ml-5">
+                    <a href="{% url 'cms:home' %}">
+                        <img src="{% static 'cms-assets/img/brand/logo_for_bright_bg.png' %}" alt="TalentAlps" class="img-fluid mt-5 mb-5" style="height: 25px;">
+                    </a>
 
-    <label for="password">Password:</label>
-    {% render_field form.password %}
-    {{ form.password.errors }}
+                    <div class="d-flex mt-4">
+                        <span class="m-0"><i class="fas fa-check-circle text-primary"></i></span>
+                        <div class="ml-4" style="margin-top: -2px;">
+                            <p class="m-0 font-weight-normal">Quick and free sign up</p>
+                            <p class="font-weight-lighter small text-gray">Enter your email to get access to the Employer Dashboard</p>
+                        </div>
+                    </div>
 
-    <label for="retype_password">Retype Password:</label>
-    {% render_field form.retype_password %}
-    {{ form.retype_password.errors }}
+                    <div class="d-flex mt-4">
+                        <span class="m-0"><i class="fas fa-check-circle text-primary"></i></span>
+                        <div class="ml-4" style="margin-top: -2px;">
+                            <p class="m-0 font-weight-normal">Create job listings</p>
+                            <p class="font-weight-lighter small text-gray">Jump straight to creating job listings and preview how they look before publishing</p>
+                        </div>
+                    </div>
 
-    <label for="email">Email:</label>
-    {% render_field form.email %}
-    {{ form.email.errors }}
+                    <div class="d-flex mt-4">
+                        <span class="m-0"><i class="fas fa-check-circle text-primary"></i></span>
+                        <div class="ml-4" style="margin-top: -2px;">
+                            <p class="m-0 font-weight-normal">Create multiple companies</p>
+                            <p class="font-weight-lighter small text-gray">Manage multiple companies under the same employer account</p>
+                        </div>
+                    </div>
 
-    <label for="full name">Full Name:</label>
-    {% render_field form.name %}
-    {{ form.name.errors }}
+                </div>
 
-    <label for="contact">Contact:</label>
-    {% render_field form.contact %}
-    {{ form.contact.errors }}
+                <div class="d-flex flex-column justify-content-end mt-3 pt-5 px-5 mr-2 pl-5">
 
-    <label for="state">State:</label>
-    {% render_field form.state %}
-    {{ form.state.errors }}
+                    <div class="d-flex mt-4 justify-content-end pt-3">
+                        <div class="mr-4" style="margin-top: -2px;">
+                            <p class="m-0 font-weight-normal text-right">Auto job application filtering system</p>
+                            <p class="font-weight-lighter small text-gray text-right">Know whether a candidate is qualified at a glance</p>
+                        </div>
+                        <span class="m-0"><i class="fas fa-check-circle text-primary"></i></span>
+                    </div>
 
-    <label for="country">Country:</label>
-    {% render_field form.country %}
-    {{ form.country.errors }}
+                    <div class="d-flex mt-4 justify-content-end">
+                        <div class="mr-4" style="margin-top: -2px;">
+                            <p class="m-0 font-weight-normal text-right">Interview and messaging system</p>
+                            <p class="font-weight-lighter small text-gray text-right">Set and notify your job applicants on the details of the interview</p>
+                        </div>
+                        <span class="m-0"><i class="fas fa-check-circle text-primary"></i></span>
+                    </div>
 
-    <button type="submit">Register</button>
-</form>
+                    <div class="d-flex mt-4 justify-content-end">
+                        <div class="mr-4" style="margin-top: -2px;">
+                            <p class="m-0 font-weight-normal text-right">Job listing features</p>
+                            <p class="font-weight-lighter small text-gray text-right">Urgently hiring? We’ve got you covered with our special job listing features</p>
+                        </div>
+                        <span class="m-0"><i class="fas fa-check-circle text-primary"></i></span>
+                    </div>
 
-<a href="{% url 'employer:login' %}">Already have an account?</a>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Registration Form -->
+        <div class="col-12 col-md-6 pl-5 pr-4" style="max-width: 600px;">
+            <div class="ml-md-5 mt-md-0 pr-md-5 py-5">
+                <a href="{% url 'cms:home' %}" class="d-block d-md-none"><img src="{% static 'cms-assets/img/brand/logo_for_bright_bg.png' %}" alt="TalentAlps Registration" class="img-fluid px-5"></a>
+                
+                <h4 class="font-weight-bold d-none d-md-block">Create an Employer Account at TalentAlps now!</h4>
+                <h6 class="font-weight-normal d-block d-md-none text-center mt-4">Create an Employer Account at TalentAlps now!</h6>
+
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="form-group mt-5">
+                        <h6 class="font-weight-lighter">Email</h6>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon1"><i class="ni ni-email-83"></i></span>
+                            </div>
+                            {% render_field form.email class="form-control" placeholder="johndoe@mail.my" aria-label="Email" aria-describedby="basic-addon1" %}
+                        </div>
+                        {% for error in form.email.errors %}
+                            <p class="mb-0 small text-danger font-weight-light">{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                    
+                    <div class="form-group mt-4">
+                        <h6 class="font-weight-lighter">Full Name</h6>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon1"><i class="ni ni-single-02"></i></span>
+                            </div>
+                            {% render_field form.name class="form-control" placeholder="John Doe" aria-label="Full Name" aria-describedby="basic-addon1" %}
+                        </div>
+                        {% for error in form.name.errors %}
+                            <p class="mb-0 small text-danger font-weight-light">{{ error }}</p>
+                        {% endfor %}
+                    </div>
+
+                    <div class="form-group mt-4">
+                        <h6 class="font-weight-lighter">Password</h6>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon1"><i class="ni ni-lock-circle-open"></i></span>
+                            </div>
+                            {% render_field form.password class="form-control" placeholder="" aria-label="Password" aria-describedby="basic-addon1" %}
+                        </div>
+                        {% for error in form.password.errors %}
+                            <p class="mb-0 small text-danger font-weight-light" style="white-space: pre-line;">{{ error }}</p>
+                        {% endfor %}
+                    </div>
+
+                    <div class="form-group mt-4">
+                        <h6 class="font-weight-lighter">Confirm Password</h6>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon1"><i class="ni ni-lock-circle-open"></i></span>
+                            </div>
+                            {% render_field form.retype_password class="form-control" placeholder="" aria-label="Confirm Password" aria-describedby="basic-addon1" %}
+                        </div>
+                        {% for error in form.retype_password.errors %}
+                            <p class="mb-0 small text-danger font-weight-light">{{ error }}</p>
+                        {% endfor %}
+                    </div>
+
+                    <div class="form-group mt-5">
+
+                        <div class="custom-control custom-checkbox">
+                            <input class="custom-control-input" id="id_conditions_check" type="checkbox" name="accept_terms">
+                            <label class="custom-control-label font-weight-lighter pl-3" for="id_conditions_check"><span class="text-default opacity-5">I accept the terms and conditions & privacy policy.</span></label>
+                        </div>
+                        {% for error in form.accept_terms.errors %}
+                            <p class="mb-0 small text-danger font-weight-light">{{ error }}</p>
+                        {% endfor %}
+                        <div class="custom-control custom-checkbox mt-2">
+                            <input class="custom-control-input" id="id_updates_check" type="checkbox" name="receive_updates">
+                            <label class="custom-control-label font-weight-lighter pl-3" for="id_updates_check"><span class="text-default opacity-5">I would like to receive promotional material & updates by email.</span></label>
+                        </div>
+
+                    </div>
+
+                    <button type="submit" class="btn btn-block btn-primary mt-5">Create Account</button>
+                    <p class="font-weight-lighter mt-2 small text-gray text-center">Already have an account? <a href="{% url 'employer:login' %}">Sign In</a></p>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
 {% endblock content %}

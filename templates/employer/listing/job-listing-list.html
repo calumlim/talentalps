@@ -1,0 +1,70 @@
+{% extends '../employer-base.html' %}
+{% load static humanize %}
+{% block title %}
+Job Listings
+{% endblock title %}
+
+{% block page_css %}
+<link rel="stylesheet" href="{% static 'dashboard-assets/vendor/datatables.net-bs4/css/dataTables.bootstrap4.min.css' %}" type="text/css">
+<link rel="stylesheet" href="{% static 'dashboard-assets/vendor/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css' %}" type="text/css">
+<link rel="stylesheet" href="{% static 'dashboard-assets/vendor/datatables.net-select-bs4/css/select.bootstrap4.min.css' %}" type="text/css">
+{% endblock page_css %}
+
+{% block content %}
+
+<div class="header bg-primary pb-6">
+    <div class="container-fluid">
+        <div class="header-body">
+            <div class="row align-items-center py-4">
+                <div class="col-lg-6 col-7">
+                    <h6 class="h2 text-white d-inline-block mb-0">Job Listings</h6>
+                    <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
+                        <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
+                        <li class="breadcrumb-item"><a href="{% url 'employer:dashboard' %}"><i class="fas fa-home"></i></a></li>
+                        <li class="breadcrumb-item"><a href="{% url 'employer:dashboard' %}">Dashboard</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Job Listings</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+            <a href="{% url 'job:job-listing-create' %}">
+                <button class="btn btn-cion btn-outline-white pl-3 pr-4 mt-4" type="button">
+                    <span class="btn-inner--icon"><i class="ni ni-fat-add mr-1"></i></span>
+                    <span class="btn-inner--text">Create Job Listing</span>
+                </button>
+            </a>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
+
+{% block page_js %}
+<script src="{% static 'dashboard-assets/vendor/datatables.net/js/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'dashboard-assets/vendor/datatables.net-bs4/js/dataTables.bootstrap4.min.js' %}"></script>
+<script src="{% static 'dashboard-assets/vendor/datatables.net-buttons/js/dataTables.buttons.min.js' %}"></script>
+<script src="{% static 'dashboard-assets/vendor/datatables.net-buttons-bs4/js/buttons.bootstrap4.min.js' %}"></script>
+<script src="{% static 'dashboard-assets/vendor/datatables.net-buttons/js/buttons.html5.min.js' %}"></script>
+<script src="{% static 'dashboard-assets/vendor/datatables.net-buttons/js/buttons.flash.min.js' %}"></script>
+<script src="{% static 'dashboard-assets/vendor/datatables.net-buttons/js/buttons.print.min.js' %}"></script>
+<script src="{% static 'dashboard-assets/vendor/datatables.net-select/js/dataTables.select.min.js' %}"></script>
+
+<script>
+    $(document).ready(function(){ 
+        var options = {
+            pageLength: 25,
+            order: [[2, 'desc']],
+            language: {
+            paginate: {
+                previous: "<i class='fas fa-angle-left'>",
+                next: "<i class='fas fa-angle-right'>"
+            }
+            },
+            responsive: true,
+            scrollX: true,
+        };
+        $('#myTable').DataTable(options)
+    });
+</script>
+
+{% endblock page_js %}

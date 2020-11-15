@@ -8,7 +8,13 @@ services:
       - POSTGRES_DB=talentalps
       - POSTGRES_USER=talentalps
       - POSTGRES_PASSWORD=talentalps
-  talentalps:
+
+  redis:
+    image: redis:6.0.9-alpine
+    volumes:
+      - redis_data:/data
+    
+  app:
     restart: always
     build: .
     volumes: &talentalps_volumes
@@ -17,8 +23,10 @@ services:
       - "8000:8000"
     links: &talentalps_links
       - db
+      - redis
     depends_on:
       - db
+      - redis
     environment: 
       # Django variables
       DJANGO_SETTINGS_MODULE: talentalps.settings
@@ -44,4 +52,10 @@ services:
       # EMAIL_HOST: ""
       # EMAIL_HOST_USER: ""
       # EMAIL_HOST_PASSWORD: ""
+
+      # REDIS
+      REDIS_HOST: redis
     command: start_dev
+
+volumes: 
+  redis_data:

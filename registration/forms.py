@@ -11,19 +11,17 @@ from user.models import Candidate, Company
 User = get_user_model()
 
 class UserProfileForm(forms.Form):
-    username = forms.RegexField(regex=r'^[\w.@+-]+\Z', max_length=100, required=True, error_messages = {"invalid": "Enter a valid username. This value may contain only English letters, numbers, and @/./+/-/_ characters."})
-    password = forms.CharField(widget=forms.PasswordInput())
-    retype_password = forms.CharField(widget=forms.PasswordInput())
     email = forms.EmailField(required=True)
     name = forms.CharField(max_length=100, required=True)
-    contact = forms.RegexField(regex=r'^\+?1?\d{9,15}$', strip=True, error_messages = {"invalid": "Phone number must be entered in the format: '+6012342069'. Up to 15 digits allowed."})
-    state = forms.ChoiceField(required=True, choices=constants.STATE, initial='selangor')
-    country = forms.ChoiceField(required=True, choices=constants.COUNTRY, initial='MY')
-    def clean_username(self):
-        username = self.cleaned_data.get('username')
-        if User.objects.filter(username=username).exists():
-            raise forms.ValidationError("Username already exists, please try a different username.")
-        return username
+    password = forms.CharField(widget=forms.PasswordInput())
+    retype_password = forms.CharField(widget=forms.PasswordInput())
+    accept_terms = forms.BooleanField(required=False)
+    receive_updates = forms.BooleanField(required=False)
+
+    def clean_accept_terms(self):
+        accept_terms = self.cleaned_data.get('accept_terms')
+        if not accept_terms:
+            raise forms.ValidationError("You must read and accept the Terms & Condition and Privacy Policy before registering")
 
     def clean_password(self):
         password = self.cleaned_data.get('password')
@@ -45,7 +43,7 @@ class UserProfileForm(forms.Form):
     def clean_retype_password(self):
         retype_password = self.cleaned_data.get('retype_password')
         if retype_password != self.cleaned_data.get('password'):
-            raise forms.ValidationError("Passwords do not match!")
+            raise forms.ValidationError("Passwords do not match")
         return retype_password
 
     def clean_email(self):

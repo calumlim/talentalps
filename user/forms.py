@@ -1,13 +1,27 @@
 from django import forms
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model, authenticate
+
+User = get_user_model()
 
 class LogInForm(forms.Form):
-    username = forms.CharField(max_length=150, required=True)
-    password = forms.CharField(widget=forms.PasswordInput())
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['username'].help_text = None
+    email = forms.EmailField(max_length=150, required=True)
+    password = forms.CharField(widget=forms.PasswordInput(), required=True)
+    
+    def clean(self):
+        email = self.cleaned_data.get('email')
+        password = self.cleaned_data.get('password')
+        try:
+            user = authenticate(username=email, password=password)
+            if user is not None:
+                if user.userprofile.verified:
+                    return user
+                else:
+                    raise forms.ValidationError("Please verify your account before logging in.")
+            else:
+                raise forms.ValidationError("Email or password is incorrect.")
+        except User.DoesNotExist:
+            raise forms.ValidationError("Email or password is incorrect.")
+        return None
 
 class ResetPasswordEmailForm(forms.Form):
     email = forms.EmailField(max_length=100, required=True)

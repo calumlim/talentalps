@@ -1,0 +1,105 @@
+{% extends './employer-base.html' %}
+{% load static humanize %}
+{% block title %}
+Pending Job Applications
+{% endblock title %}
+
+{% block page_css %}
+<link rel="stylesheet" href="{% static 'dashboard-assets/vendor/datatables.net-bs4/css/dataTables.bootstrap4.min.css' %}" type="text/css">
+<link rel="stylesheet" href="{% static 'dashboard-assets/vendor/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css' %}" type="text/css">
+<link rel="stylesheet" href="{% static 'dashboard-assets/vendor/datatables.net-select-bs4/css/select.bootstrap4.min.css' %}" type="text/css">
+{% endblock page_css %}
+
+{% block content %}
+
+<div class="header bg-primary pb-6">
+    <div class="container-fluid">
+        <div class="header-body">
+            <div class="row align-items-center py-4">
+                <div class="col-lg-6 col-7">
+                <h6 class="h2 text-white d-inline-block mb-0">Pending Job Applications</h6>
+                <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
+                    <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
+                      <li class="breadcrumb-item"><a href="{% url 'employer:dashboard' %}"><i class="fas fa-home"></i></a></li>
+                      <li class="breadcrumb-item"><a href="{% url 'employer:dashboard' %}">Dashboard</a></li>
+                      <li class="breadcrumb-item active" aria-current="page">Pending Job Applications</li>
+                    </ol>
+                  </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- DataTables -->
+<div class="table-responsive px-4 mt-n5">
+    <div class="card py-4">
+        <table class="table table-flush w-100" id="myTable">
+            <thead class="thead-light">
+                <tr>
+                    <th>Job Title</th>
+                    <th>Company Name</th>
+                    <th>Date</th>
+                    <th>Candidate Name</th>
+                    <th>Status</th>
+                    <th>Qualifications</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Pyton Web Dev</td>
+                    <td class="d-flex align-items-center">
+                        <img src="{% static 'dashboard-assets/img/theme/team-1.jpg' %}" alt="" class="avatar avatar-xs mr-2">
+                        Maxis
+                    </td>
+                    <td>2 days ago</td>
+                    <td>Calum Lim Sheng En</td>
+                    <td>
+                        <span class="badge badge-dot mr-4 p-0">
+                            <i class="bg-gray mb-1"></i>
+                            <span class="status">Pending</span>
+                        </span>
+                    </td>
+                    <td>
+                        <span class="badge badge-pill badge-success">QUALIFIED BY 1 YEAR</span>
+                        <span class="badge badge-pill badge-secondary text-gray">QUESTIONNAIRE</span>
+                    </td>
+                    <td><a href="#">Details</a></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock content %}
+
+{% block page_js %}
+<script src="{% static 'dashboard-assets/vendor/datatables.net/js/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'dashboard-assets/vendor/datatables.net-bs4/js/dataTables.bootstrap4.min.js' %}"></script>
+<script src="{% static 'dashboard-assets/vendor/datatables.net-buttons/js/dataTables.buttons.min.js' %}"></script>
+<script src="{% static 'dashboard-assets/vendor/datatables.net-buttons-bs4/js/buttons.bootstrap4.min.js' %}"></script>
+<script src="{% static 'dashboard-assets/vendor/datatables.net-buttons/js/buttons.html5.min.js' %}"></script>
+<script src="{% static 'dashboard-assets/vendor/datatables.net-buttons/js/buttons.flash.min.js' %}"></script>
+<script src="{% static 'dashboard-assets/vendor/datatables.net-buttons/js/buttons.print.min.js' %}"></script>
+<script src="{% static 'dashboard-assets/vendor/datatables.net-select/js/dataTables.select.min.js' %}"></script>
+
+<script>
+    $(document).ready(function(){ 
+        var options = {
+            pageLength: 25,
+            order: [[2, 'desc']],
+            language: {
+            paginate: {
+                previous: "<i class='fas fa-angle-left'>",
+                next: "<i class='fas fa-angle-right'>"
+            }
+            },
+            responsive: true,
+            scrollX: true,
+        };
+        $('#myTable').DataTable(options)
+    });
+</script>
+
+{% endblock page_js %}

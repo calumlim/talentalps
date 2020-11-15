@@ -5,6 +5,16 @@ from talentalps.models import BaseModel
 
 # Create your models here.
 class JobApplicationNotification(BaseModel):
+    TYPE_INTERVIEW = 'interview'
+    TYPE_APPROVED = 'approved'
+    TYPE_DECLINED = 'declined'
+    TYPE_CHOICES = (
+        (TYPE_INTERVIEW, 'Interview has been set!'),
+        (TYPE_APPROVED, 'Job Application has been approved!'),
+        (TYPE_DECLINED, 'Unfortunately, your job application has been declined.')
+    )
+
+    type = models.CharField(_("type"), max_length=100, choices=TYPE_CHOICES)
     message = models.CharField(_("message"), max_length=200)
     seen = models.BooleanField(_("seen"), default=False)
 

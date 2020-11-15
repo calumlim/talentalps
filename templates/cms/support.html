@@ -1,8 +1,85 @@
-{% extends "./base.html" %}
+{% extends "../base.html" %}
+{% load static %}
 {% load widget_tweaks %}
 
 {% block title %}Support{% endblock title %}
 
+{% block page_css %}
+<style>
+    @media screen and (min-width: 0px) {
+        .support-card {
+            width: 95vw;
+        }
+    }
+
+    @media screen and (min-width: 768px) {
+        .support-card {
+            width: 50vw;
+        }
+    }
+</style>
+{% endblock page_css %}
+
 {% block content %}
-<h1>Support</h1>
+
+{% include "../partials/credentials-background.html" %}
+<section class="vh-100 d-flex justify-content-center align-items-center">
+    <div class="card support-card">
+        <div class="card-body p-5">
+            <a href="{% url 'cms:home' %}">
+                <img src="{% static 'cms-assets/img/brand/logo_for_bright_bg.png' %}" alt="TalentAlps Support" class="img-fluid mt-4" style="height: 40px;">
+            </a>
+            <h6 class="m-0 mt-5">Support</h6>
+            <p>Got an issue? We're here to help!</p>
+
+            <form method="post" class="mt-5">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-12 col-md-6">
+                        <h6>First Name</h6>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="id_first_name"><i class="ni ni-single-02"></i></span>
+                                </div>
+                                <input type="text" class="form-control" placeholder="First Name" aria-label="First Name" aria-describedby="id_first_namwe">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <h6>Last Name</h6>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="basic-addon1"><i class="ni ni-badge"></i></span>
+                                </div>
+                                <input type="text" class="form-control" placeholder="Last Name" aria-label="Last Name" aria-describedby="basic-addon1">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <h6 class="mt-2">Email</h6>
+                <div class="form-group">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon1"><i class="ni ni-email-83"></i></span>
+                        </div>
+                        <input type="text" class="form-control" placeholder="Email" aria-label="Email" aria-describedby="basic-addon1">
+                    </div>
+                </div>
+                
+                <h6 class="mt-4">Your message</h6>
+                <div class="form-group">
+                    <textarea class="form-control" id="id_message" rows="6" placeholder="Describe an issue..."></textarea>
+                </div>
+
+                <div class="form-group d-flex justify-content-end mt-4">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
 {% endblock content %}

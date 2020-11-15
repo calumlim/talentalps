@@ -1,23 +1,93 @@
-{% extends "./employer-base.html" %}
+{% extends '../base.html' %}
+{% load static %}
 {% load widget_tweaks %}
 
-{% block title %}Login{% endblock title %}
+{% block title %}
+Employer Login
+{% endblock title %}
 
 {% block content %}
-<h1>Employer Login, proffessional sikit</h1>
+{% include "../partials/credentials-background.html" %}
+  <section class="d-flex justify-content-center align-items-center min-vh-100">
+    <div class="container">
+      <div class="col-lg-5 col-md-8 mx-auto">
+        <div class="card bg-secondary shadow border-0">
+          <div class="card-body px-lg-5 py-lg-5 bg-white">
+            <div class="text-center text-muted mb-4">
+                <div class="px-5 mb-4">
+                    <a href="{% url 'cms:home' %}">
+                        <img src="{% static 'cms-assets/img/brand/logo_for_bright_bg.png' %}" alt="TalentAlps" class="img-fluid px-4">
+                    </a>
+                </div>
+              <small class="text-gray-dark">Sign in to your Employer Dashboard</small>
+            </div>
+            <form role="form" method="post">
+            {% csrf_token %}
 
-<form method="post">
-    {% csrf_token %}
-    {{ form.username.errors }}
-    {{ form.password.errors }}
-
-    <label for="username">Username:</label>
-    {% render_field form.username %}
-    <label for="password">Password:</label>
-    {% render_field form.password %}
-
-    <button type="submit">Login</button>
-</form>
-
-<a href="{% url 'user:reset-password-email' %}">Forgot Password</a>
+            {% if form.non_field_errors %}
+              {% for error in form.non_field_errors %}
+              <div class="alert alert-danger d-flex justify-content-center">
+                <label class="mb-0 font-weight-light">{{ error }}</label>
+              </div>
+              {% endfor %}
+            {% endif %}
+            
+              <div class="form-group mb-3">
+                <div class="input-group input-group-alternative">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="ni ni-email-83"></i></span>
+                  </div>
+                    {% render_field form.email class="form-control" placeholder="Email" type="email"  %}
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="input-group input-group-alternative">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="ni ni-lock-circle-open"></i></span>
+                  </div>
+                  {% render_field form.password class="form-control" placeholder="Password" type="password" %}
+                </div>
+              </div>
+              <div class="custom-control custom-control-alternative custom-checkbox">
+                <input class="custom-control-input" id="id_remember_me" name="remember_me" type="checkbox">
+                <label class="custom-control-label" for="id_remember_me"><span class="text-default opacity-5">Remember me</span></label>
+              </div>
+              <div class="text-center">
+                <button type="submit" class="btn btn-block btn-primary mt-4">Sign in</button>
+              </div>
+              <div class="row mt-1">
+                <div class="col-6 d-flex">
+                    <a href="#">
+                        <a href="{% url 'registration:employer-register' %}">
+                            <p class="m-0 small text-gray">Sign up</p>
+                        </a>
+                    </a>
+                </div>
+                <div class="col-6 d-flex justify-content-end">
+                    <a href="#">
+                        <a href="{% url 'employer:forgot-password' %}">
+                            <p class="m-0 small text-gray">Forgot Password</p>
+                        </a>
+                    </a>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 {% endblock content %}
+
+{% block page_js %}
+<script>
+  $(document).ready(function(){
+      var checked = localStorage.remember_me === 'true'? true: false;
+      $('#id_remember_me').prop('checked', checked || false);
+
+      $('#id_remember_me').on('change', function() {
+          localStorage.remember_me = $(this).is(':checked');
+      })
+  })
+</script>
+{% endblock page_js %}

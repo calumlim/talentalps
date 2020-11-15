@@ -26,7 +26,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('login/', LogInView.as_view(), name='login'),
     path('user/', include('user.urls')),
-    path('social/', include('social_django.urls', namespace='social')),
     path('registration/', include('registration.urls')),
     path('employer/', include('employer.urls')),
     path('jobs/', include('job.urls')),

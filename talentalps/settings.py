@@ -40,13 +40,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',
+    
     # Additional Django apps
     'django.contrib.postgres',
     'sass_processor',
     'widget_tweaks',
     'storages',
     'boto3',
-    'social_django',
     'ckeditor',
 
     # Project apps
@@ -71,13 +72,11 @@ MIDDLEWARE = [
 
 AUTHENTICATION_BACKENDS = [
     'user.auth_backend.UserProfileBackend',
-    'social_core.backends.google.GoogleOAuth2',
 ]
 
-LOGIN_URL = '/auth/login/google-oauth2/'
+LOGIN_URL = '/'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
-SOCIAL_AUTH_URL_NAMESPACE = 'social'
 
 ROOT_URLCONF = 'talentalps.urls'
 
@@ -218,10 +217,6 @@ EMAIL_USE_SSL = config('EMAIL_USE_SSL', default=False, cast=bool)
 EMAIL_TIMEOUT = config('EMAIL_TIMEOUT', default=None)
 DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default="TalentAlps Team <noreply@talentalps.my>")
 
-# Social Auths
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = config('SOCIAL_AUTH_GOOGLE_OAUTH2_KEY')
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = config('SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET')
-
 # CKEDITOR SETTINGS
 CKEDITOR_CONFIGS = {
     'job_listing_editor': {
@@ -230,3 +225,23 @@ CKEDITOR_CONFIGS = {
                 ["SectionLink", "Subscript", "Superscript"], ['Undo', 'Redo']],
     },
 }
+
+# SASS SETTINGS
+STATICFILES_FINDERS = [
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    'sass_processor.finders.CssFinder',
+]
+
+PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
+STATIC_ROOT = os.path.join(BASE_DIR, 'public/static/')
+STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static/'),)
+
+SASS_PROCESSOR_ENABLED = True
+
+SASS_PROCESSOR_ROOT = os.path.join(BASE_DIR, "public/static")
+
+SASS_PROCESSOR_INCLUDE_DIRS = [
+    os.path.join(BASE_DIR, 'extra-styles/scss'),
+    os.path.join(BASE_DIR, 'node_modules'),
+]

@@ -297,4 +297,10 @@ GENDER = (
 
 INDUSTRY = {
     ('telecommunications', 'Telecommunications'),
+    ('it_services', 'Information Technology & Services'),
+}
+
+JOB_FUNCTIONS = {
+    ('engineering', 'Engineering'),
+    ('it', 'Information Technology'),
 }

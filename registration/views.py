@@ -46,40 +46,40 @@ class CandidateRegisterView(FormView):
         candidate_form = forms.CandidateRegisterForm(self.request.POST)
         if candidate_form.is_valid():
             # Create User, UserProfile, Candidate models
-            # try:
-            #     with transaction.atomic():
-            user = User.objects.create(
-                username=form.cleaned_data.get('username'),
-                email=form.cleaned_data.get('email'),
-                first_name=form.cleaned_data.get('name')
-            )
-            user.set_password(form.cleaned_data.get('password'))
-            user.save()
+            try:
+                with transaction.atomic():
+                    user = User.objects.create(
+                        username=form.cleaned_data.get('username'),
+                        email=form.cleaned_data.get('email'),
+                        first_name=form.cleaned_data.get('name')
+                    )
+                    user.set_password(form.cleaned_data.get('password'))
+                    user.save()
 
-            userprofile = UserProfile.objects.create(
-                name=form.cleaned_data.get('name'),
-                contact=form.cleaned_data.get('contact'),
-                state=form.cleaned_data.get('state'),
-                country=form.cleaned_data.get('country'),
-                user=user
-            )
+                    userprofile = UserProfile.objects.create(
+                        name=form.cleaned_data.get('name'),
+                        contact=form.cleaned_data.get('contact'),
+                        state=form.cleaned_data.get('state'),
+                        country=form.cleaned_data.get('country'),
+                        user=user
+                    )
 
-            candidate = candidate_form.save(commit=False)
-            candidate.state = form.cleaned_data.get('state')
-            candidate.nationality = form.cleaned_data.get('country')
-            candidate.userprofile = userprofile
-            candidate.save()
+                    candidate = candidate_form.save(commit=False)
+                    candidate.state = form.cleaned_data.get('state')
+                    candidate.nationality = form.cleaned_data.get('country')
+                    candidate.userprofile = userprofile
+                    candidate.save()
 
-            token_generator = PasswordResetTokenGenerator()
-            token = token_generator.make_token(user)
-            url = self.request.build_absolute_uri(reverse('registration:email-verify', args=(user.pk, token)))
+                    token_generator = PasswordResetTokenGenerator()
+                    token = token_generator.make_token(user)
+                    url = self.request.build_absolute_uri(reverse('registration:email-verify', args=(user.pk, token)))
 
-            send_verification_email(user, url, self.request)
-            messages.info(self.request, _(f"A verification email has been sent to - {user.email}, you must verify your account before you can log in."))
-            return super().form_valid(form)
-            # except:
-            #     messages.error(self.request, _("Something went wrong, please try again."))
-            #     return super().get(self.request)
+                    send_verification_email(user, url, self.request)
+                    messages.info(self.request, _(f"A verification email has been sent to - {user.email}, you must verify your account before you can log in."))
+                    return super().form_valid(form)
+            except:
+                messages.error(self.request, _("Something went wrong, please try again."))
+                return super().get(self.request)
         else:
             return super().form_invalid(candidate_form)
     
@@ -87,13 +87,13 @@ class CandidateRegisterView(FormView):
 class EmployerRegisterView(FormView):
     template_name = 'registration/employer-registration.html'
     form_class = forms.UserProfileForm
-    success_url = reverse_lazy('employer:login')
+    success_url = reverse_lazy('registration:employer-register-success')
 
     def form_valid(self, form):
         try:
             with transaction.atomic():
                 user = User.objects.create(
-                    username=form.cleaned_data.get('username'),
+                    username=form.cleaned_data.get('email'),
                     email=form.cleaned_data.get('email'),
                     first_name=form.cleaned_data.get('name'),
                 )
@@ -102,12 +102,11 @@ class EmployerRegisterView(FormView):
 
                 userprofile = UserProfile.objects.create(
                     name=form.cleaned_data.get('name'),
-                    contact=form.cleaned_data.get('contact'),
                     is_employer=True,
-                    state=form.cleaned_data.get('state'),
-                    country=form.cleaned_data.get('country'),
-                    user=user
+                    user=user,
+                    receive_updates = form.cleaned_data.get('receive_updates')
                 )
+
 
                 token_generator = PasswordResetTokenGenerator()
                 token = token_generator.make_token(user)
@@ -119,6 +118,12 @@ class EmployerRegisterView(FormView):
         except:
             messages.error(self.request, _("Something went wrong, please try again."))
             return super().get(self.request)
+
+class EmployerRegistrationSuccessView(TemplateView):
+    template_name = 'registration/employer-registration-success.html'
+
+class EmployerResendVerificationEmailView(TemplateView):
+    template_name = 'registration/employer-resend-verification-email.html'
 
 
 class UserEmailVerificationView(TemplateView):

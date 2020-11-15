@@ -22,16 +22,11 @@ class LogInView(FormView):
     success_url = reverse_lazy('login')
 
     def form_valid(self, form):
-        user = authenticate(username=form.cleaned_data.get('username'), password=form.cleaned_data.get('password'))
+        user = form.cleaned_data
         if user is not None:
-            if user.userprofile.verified:
-                login(self.request, user)
-            else:
-                messages.info(self.request, _("Please verify your account before you log in."))
-                return redirect('login')
+            login(self.request, user)
         else:
-            messages.error(self.request, _("Username or password is incorrect."))
-            return super().get(self.request)
+            return redirect('login')
         return super().form_valid(form)
 
 def LogOut(request):
@@ -39,7 +34,7 @@ def LogOut(request):
 
     messages.info(request, _("You have logged out."))
 
-    return redirect(reverse_lazy('login'))
+    return redirect('cms:home')
 
 class ResetPasswordEmailView(FormView):
     template_name = 'user/reset-password-email.html'

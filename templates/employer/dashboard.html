@@ -1,10 +1,337 @@
-{% extends "./employer-base.html" %}
-{% load widget_tweaks %}
+{% extends './employer-base.html' %}
+{% load static humanize %}
 
-{% block title %}Dashboard{% endblock title %}
+{% block title %}
+Dashboard
+{% endblock title %}
 
 {% block content %}
-<h1>Employer Dashboard</h1>
+    <!-- SUMMARISED ANALYTICS -->
+      <div class="header bg-primary pb-6">
+        <div class="container-fluid">
+          <div class="header-body">
+            <div class="row align-items-center py-4">
+              <div class="col-lg-6 col-7">
+                <h6 class="h2 text-white d-inline-block mb-0">Summary</h6>
+                <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
+                  <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
+                    <li class="breadcrumb-item"><a href="{% url 'employer:dashboard' %}"><i class="fas fa-home"></i></a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'employer:dashboard' %}">Dashboard</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Summary</li>
+                  </ol>
+                </nav>
+              </div>
+            </div>
+            <!-- Card stats -->
+            <div class="row">
+              <div class="col-xl-3 col-md-6">
+                <div class="card card-stats">
+                  <!-- Card body -->
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col">
+                        <h5 class="card-title text-uppercase text-muted mb-0">Total traffic</h5>
+                        <span class="h2 font-weight-bold mb-0">350,897</span>
+                      </div>
+                      <div class="col-auto">
+                        <div class="icon icon-shape bg-gradient-red text-white rounded-circle shadow">
+                          <i class="ni ni-active-40"></i>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-xl-3 col-md-6">
+                <div class="card card-stats">
+                  <!-- Card body -->
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col">
+                        <h5 class="card-title text-uppercase text-muted mb-0">Today's views</h5>
+                        <span class="h2 font-weight-bold mb-0">2,356</span>
+                      </div>
+                      <div class="col-auto">
+                        <div class="icon icon-shape bg-gradient-orange text-white rounded-circle shadow">
+                          <i class="ni ni-chart-pie-35"></i>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-xl-3 col-md-6">
+                <div class="card card-stats">
+                  <!-- Card body -->
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col">
+                        <h5 class="card-title text-uppercase text-muted mb-0">Job applications</h5>
+                        <span class="h2 font-weight-bold mb-0">924</span>
+                      </div>
+                      <div class="col-auto">
+                        <div class="icon icon-shape bg-gradient-success text-white rounded-circle shadow">
+                          <i class="ni ni-single-copy-04"></i>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-xl-3 col-md-6">
+                <div class="card card-stats">
+                  <!-- Card body -->
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col">
+                        <h5 class="card-title text-uppercase text-muted mb-0">Performance</h5>
+                        <span class="h2 font-weight-bold mb-0">49,65%</span>
+                      </div>
+                      <div class="col-auto">
+                        <div class="icon icon-shape bg-gradient-info text-white rounded-circle shadow">
+                          <i class="ni ni-chart-bar-32"></i>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+  
+      <!-- RECENT JOB APPLICATIONS -->
+      <div class="container-fluid mt--6">
+        <div class="row">
+          <div class="col-xl-12">
+            <div class="card">
+              <!-- Card header -->
+              <div class="card-header border-0">
+                <div class="row align-items-center">
+                  <div class="col">
+                    <h3 class="mb-0 align-items-center d-flex"><i class="ni ni-single-copy-04 pr-3 text-primary"></i> Recent Job Applications</h3>
+                  </div>
+                  <div class="col text-right">
+                    <a href="{% url 'employer:job-application-pending' %}" class="small">See all</a>
+                  </div>
+                </div>
+              </div>
+              <div class="table-responsive">
+                <table class="table align-items-center table-flush">
+                  <thead class="thead-light">
+                    <tr>
+                      <th scope="col">Position</th>
+                      <th scope="col">Date</th>
+                      <th scope="col">Status</th>
+                      <th scope="col">Name</th>
+                      <th scope="col">Qualifications</th>
+                      <th scope="col"></th>
+                    </tr>
+                  </thead>
+                  <tbody class="list">
+                    <tr>
+                      <th scope="row">Python Web Developer</th>
+                      <td>12 Nov 2020</td>
+                      <td>
+                        <span class="badge badge-dot mr-4">
+                          <i class="bg-gray mb-1"></i>
+                          <span class="status">Pending</span>
+                        </span>
+                      </td>
+                      <td>Calum Lim Sheng En</td>
+                      <td>
+                        <span class="badge badge-pill badge-success">QUALIFIED BY 1 YEAR</span>
+                        <span class="badge badge-pill badge-secondary text-gray">QUESTIONNAIRE</span>
+                      </td>
+                      <td class="text-right">
+                        <div class="dropdown">
+                          <a class="btn btn-sm btn-icon-only text-light" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-ellipsis-v"></i>
+                          </a>
+                          <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
+                            <a class="dropdown-item" href="#">View Details</a>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+  
+  
+          <!-- UPCOMING INTERVIEWS -->
+          <div class="col-xl-4">
+            <div class="card">
+              <!-- Card header -->
+              <div class="card-header">
+                <div class="row align-items-center">
+                  <div class="col">
+                    <h3 class="mb-0 align-items-center d-flex"><i class="ni ni-chat-round pr-3 text-primary"></i> Upcoming Interviews</h3>
+                  </div>
+                  <div class="col text-right">
+                    <a href="#!" class="small">See all</a>
+                  </div>
+                </div>
+              </div>
+              <!-- Card body -->
+              <div class="card-body p-0">
+                <!-- List group -->
+                <div class="list-group list-group-flush">
+                  <a href="#" class="list-group-item list-group-item-action flex-column align-items-start py-4 px-4">
+                    <div class="d-flex w-100 justify-content-between">
+                      <div>
+                        <div class="d-flex w-100 align-items-center">
+                          <img src="{% static 'dashboard-assets/img/theme/team-1.jpg' %}" alt="Image placeholder" class="avatar avatar-xs mr-2" />
+                          <h4 class="mb-1 ml-3">Python Web Developer</h4>
+                        </div>
+                      </div>
+                    </div>
+                    <p class="text-sm mb-0 mt-1 ml-5">12 Nov 2020 @ 10.30pm</p>
+                    <p class="text-sm mb-0 ml-5">Starbucks Bangsar South</p>
+                    <div class="ml-5 d-flex mt-2 align-items-center">
+                      <img src="{% static 'dashboard-assets/img/theme/team-2.jpg' %}" alt="" class="avatar avatar-xs mr-2 rounded-circle" />
+                      <p class="ml-2 mb-0 text-sm">Calum Lim Sheng En</p>
+                    </div>
+                  </a>
+                  <a href="#" class="list-group-item list-group-item-action flex-column align-items-start py-4 px-4">
+                    <div class="d-flex w-100 justify-content-between">
+                      <div>
+                        <div class="d-flex w-100 align-items-center">
+                          <img src="{% static 'dashboard-assets/img/theme/team-3.jpg' %}" alt="Image placeholder" class="avatar avatar-xs mr-2" />
+                          <h4 class="mb-1 ml-3">Python Web Developer</h4>
+                        </div>
+                      </div>
+                    </div>
+                    <p class="text-sm mb-0 mt-1 ml-5">12 Nov 2020 @ 10.30pm</p>
+                    <p class="text-sm mb-0 ml-5">Starbucks Bangsar South</p>
+                    <div class="ml-5 d-flex mt-2 align-items-center">
+                      <img src="{% static 'dashboard-assets/img/theme/team-3.jpg' %}" alt="" class="avatar avatar-xs mr-2 rounded-circle" />
+                      <p class="ml-2 mb-0 text-sm">Calum Lim Sheng En</p>
+                    </div>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+  
+          <div class="col-xl-4">
+            <div class="card">
+              <!-- Card header -->
+              <div class="card-header">
+                <div class="row align-items-center">
+                  <div class="col">
+                    <h3 class="mb-0 align-items-center d-flex"><i class="ni ni-bell-55 pr-3 text-primary"></i> Latest Notifications</h3>
+                  </div>
+                  <div class="col text-right">
+                    <a href="#!" class="small">See all</a>
+                  </div>
+                </div>
+              </div>
+              <!-- Card body -->
+              <div class="card-body p-0">
+                <!-- List group -->
+                <div class="list-group list-group-flush">
+                  <a href="#" class="list-group-item list-group-item-action flex-column align-items-start py-4 px-4">
+                    <div class="d-flex w-100 justify-content-between">
+                      <div>
+                        <div class="d-flex w-100 align-items-center">
+                          <img src="{% static 'dashboard-assets/img/theme/team-3.jpg' %}" alt="Image placeholder" class="avatar avatar-xs mr-2 rounded-circle" />
+                          <h5 class="mb-1">Calum Lim</h5>
+                        </div>
+                      </div>
+                      <small>2 hrs ago</small>
+                    </div>
+                    <h4 class="mt-3 mb-1"><span class="text-primary">●</span> New Job Application</h4>
+                    <p class="text-sm mb-0">Calum Lim just applied for Python Backend Developer @ Facebook</p>
+                  </a>
+                  <a href="#" class="list-group-item list-group-item-action flex-column align-items-start py-4 px-4">
+                    <div class="d-flex w-100 justify-content-between">
+                      <div>
+                        <div class="d-flex w-100 align-items-center">
+                          <img src="{% static 'dashboard-assets/img/theme/team-3.jpg' %}" alt="Image placeholder" class="avatar avatar-xs mr-2" />
+                          <h5 class="mb-1">Tevin Lim</h5>
+                        </div>
+                      </div>
+                      <small>1 day ago</small>
+                    </div>
+                    <h4 class="mt-3 mb-1"><span class="text-danger">●</span> Interview Cancelled</h4>
+                    <p class="text-sm mb-0">Tevin Lim has just cancelled the interview for Python Backend Developer @ Maxis SDN BHD</p>
+                  </a>
+                </div>
+              </div>
+            </div>
+        </div>
+  
+          <!-- JOB LISTING VIEWS -->
+          <div class="col-xl-4">
+            <div class="card">
+              <div class="card-header border-0">
+                <div class="row align-items-center">
+                  <div class="col">
+                    <h3 class="mb-0 align-items-center d-flex"><i class="ni ni-tag pr-3 text-primary"></i> Job Listing Views</h3>
+                  </div>
+                  <div class="col text-right">
+                    <a href="#!" class="small">See all</a>
+                  </div>
+                </div>
+              </div>
+              <div class="table-responsive">
+                <!-- Projects table -->
+                <table class="table align-items-center table-flush">
+                  <thead class="thead-light">
+                    <tr>
+                      <th scope="col">Title</th>
+                      <th scope="col">Views</th>
+                      <th scope="col">Company</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                        <td>Python Web Developer</td>
+                        <td>5,435 Views</td>
+                        <td>
+                            Maxis
+                            <img src="{% static 'dashboard-assets/img/theme/team-3.jpg' %}" alt="" class="avatar avatar-xs ml-2" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Python Web Developer</td>
+                        <td>5,435 Views</td>
+                        <td>
+                            Maxis
+                            <img src="{% static 'dashboard-assets/img/theme/team-3.jpg' %}" alt="" class="avatar avatar-xs ml-2" />
+                        </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
 
-<a href="{% url 'user:logout' %}">Logout</a>
+          <!-- JOB APPLICATIONS CHART -->
+          <div class="col-xl-4">
+            <div class="card">
+              <div class="card-header bg-transparent">
+                <div class="row align-items-center">
+                  <div class="col">
+                    <h6 class="text-uppercase text-muted ls-1 mb-1">Performance</h6>
+                    <h5 class="h3 mb-0">Number of Job Applications</h5>
+                  </div>
+                </div>
+              </div>
+              <div class="card-body">
+                <!-- Chart -->
+                <div class="chart">
+                  <canvas id="chart-bars" class="chart-canvas"></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
+  
+        </div>
+        
+      </div>
 {% endblock content %}

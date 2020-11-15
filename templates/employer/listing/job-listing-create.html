@@ -1,0 +1,303 @@
+{% extends '../employer-base.html' %}
+{% load static humanize widget_tweaks %}
+{% block title %}
+Create Job Listing
+{% endblock title %}
+
+{% block page_css %}
+<link rel="stylesheet" href="{% static 'dashboard-assets/vendor/select2/dist/css/select2.min.css' %}">
+{% endblock page_css %}
+
+{% block content %}
+
+<div class="header bg-primary pb-6">
+    <div class="container-fluid">
+        <div class="header-body">
+            <div class="row align-items-center py-4">
+                <div class="col-lg-6 col-7">
+                    <h6 class="h2 text-white d-inline-block mb-0">Create Job Listing</h6>
+                    <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
+                        <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
+                        <li class="breadcrumb-item"><a href="{% url 'employer:dashboard' %}"><i class="fas fa-home"></i></a></li>
+                        <li class="breadcrumb-item"><a href="{% url 'employer:dashboard' %}">Dashboard</a></li>
+                        <li class="breadcrumb-item"><a href="{% url 'job:job-listing' %}">Job Listings</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Create Job Listings</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="d-flex justify-content-center" style="margin-top: -90px;">
+    <div class="card" style="width: 350px; z-index: 1050;">
+        <!-- Live Preview -->
+        <div class="card-body position-relative p-4">
+            <i class="fas fa-ellipsis-v position-absolute right-3 text-gray opacity-5"></i>
+            <img src="{% static 'dashboard-assets/img/theme/team-1.jpg' %}" class="avatar-lg rounded" alt="Company" id="id_preview_company_img">
+            <p class="mb-0 mt-2 font-weight-normal" id="id_preview_title">Junior Web Developer</p>
+            <p class="mb-0 small font-weight-light mt-2" id="id_preview_state">Federal Territory of Kuala Lumpur</p>
+            <p class="mb-0 small font-weight-light" id="id_preview_company">TalentAlps</p>
+
+            <p class="mb-0 small font-weight-lighter text-gray mt-4 opacity-7">30 seconds ago</p>
+            <div class="d-flex mt-2">
+                <span class="badge font-weight-normal py-2 px-3 text-primary mr-2" style="background-color: #DDEEFF; text-transform: none;" id="id_preview_employment_type">Full Time</span>
+                <span class="badge font-weight-normal py-2 px-3 text-primary mr-2" style="background-color: #DDEEFF; text-transform: none;" id="id_preview_min_years">Min 2 Years</span>
+                <span class="badge font-weight-normal py-2 px-3 text-primary mr-2" style="background-color: #DDEEFF; text-transform: none;" id="id_preview_level">Junior</span>
+            </div>
+            <small class="mb-0 small text-gray font-weight-lighter opacity-7"><i>*This is an example preview of your job listing</i></small>
+        </div>
+    </div>
+</div>
+
+<div class="container" style="margin-top: -260px;">
+
+    
+
+    <!-- Editing Form -->
+    <div class="card" style="max-width: 1200px;">
+        <div class="card-body p-5">
+            
+            <form method='post' style="margin-top: 200px;">
+                {% csrf_token %}
+                <h4 class="text-muted mb-4 font-weight-normal small">JOB INFORMATION</h4>
+                
+                <div class="row mt-4">
+                    <div class="col-12 col-sm-6">
+                        <div class="form-group">
+                            <label for="id_title" class="form-control-label">Title</label>
+                            {% render_field form.title class="form-control" placeholder="Junior Web Developer" %}
+                        </div>
+                        {% for error in form.title.errors %}
+                            <p class="small text-danger font-weight-light mb-0 mt-1">{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                    <div class="col-12 col-sm-6">
+                        <div class="form-group">
+                            <label for="id_level" class="form-control-label">Seniority Level</label>
+                            {% render_field form.level class="form-control" data-toggle="select" title="Seniority Level Select" data-placeholder="Seniority Level" %}
+                        </div>
+                        {% for error in form.level.errors %}
+                            <p class="small text-danger font-weight-light mb-0 mt-1">{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                </div>
+                
+                <div class="row mt-2">
+                    <div class="col-12 col-sm-6">
+                        <div class="form-group">
+                            <label for="id_industry" class="form-control-label">Industry</label>
+                            {% render_field form.industry class="form-control" data-toggle="select" multiple="" %}
+                        </div>
+                        {% for error in form.industry.errors %}
+                            <p class="small text-danger font-weight-light mb-0 mt-1">{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                    <div class="col-12 col-sm-6">
+                        <div class="form-group">
+                            <label for="id_employment_type" class="form-control-label">Employment Type</label>
+                            {% render_field form.employment_type class="form-control" data-toggle="select" title="Employment Type Select" data-placeholder="Employment Type" %}
+                        </div>
+                        {% for error in form.employment_type.errors %}
+                            <p class="small text-danger font-weight-light mb-0 mt-1">{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="row mt-2">
+                    <div class="col-12 col-sm-6">
+                        <div class="form-group">
+                            <div class="form-group">
+                                <label for="id_job_functions" class="form-control-label">Job Functions</label>
+                                {% render_field form.job_functions class="form-control" data-toggle="select" multiple="" %}
+                            </div>
+                            {% for error in form.job_functions.errors %}
+                                <p class="small text-danger font-weight-light mb-0 mt-1">{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6">
+                        <div class="form-group">
+                            <label for="id_years_of_experience" class="form-control-label">Minimum Year(s) of Experience <i class="fas fa-info-circle text-gray ml-2" data-toggle="tooltip" data-placement="top" title="Set years of experience to 0 if you're accepting fresh graduates."></i></label>
+                            <div class="input-group">
+                                {% render_field form.years_of_experience class="form-control" %}
+                                <div class="input-group-append">
+                                    <span class="input-group-text" id="id_years_of_experience">Year(s)</span>
+                                </div>
+                            </div>
+                        </div>
+                        {% for error in form.years_of_experience.errors %}
+                            <p class="small text-danger font-weight-light mb-0 mt-1">{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                </div>
+                
+
+                <div class="row mt-2">
+                    <div class="col-12 col-sm-6">
+                        <div class="form-group">
+                            <label for="id_pay_from" class="form-control-label">Pay From</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">RM</span>
+                                </div>
+                                {% render_field form.pay_from class="form-control" placeholder="0.00" %}
+                            </div>
+                        </div>
+                        {% for error in form.pay_from.errors %}
+                            <p class="small text-danger font-weight-light mb-0 mt-1">{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                    <div class="col-12 col-sm-6">
+                        <div class="form-group">
+                            <label for="id_pay_to" class="form-control-label">Pay To</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">RM</span>
+                                </div>
+                                {% render_field form.pay_to class="form-control" placeholder="0.00" %}
+                            </div>
+                        </div>
+                        {% for error in form.pay_to.errors %}
+                            <p class="small text-danger font-weight-light mb-0 mt-1">{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="border-bottom mt-4"></div>
+
+                <h4 class="text-muted mb-4 font-weight-normal small mt-4">COMPANY INFORMATION</h4>
+                <div class="row mt-4">
+                    <div class="col-12 col-sm-6">
+                        <div class="form-group">
+                            <label for="id_company" class="form-control-label">Company</label>
+                            <div class="d-flex">
+                                {% render_field form.company class="form-control" data-toggle="select" title="Company Select" data-placeholder="Company"%}
+                                <img src="{% static 'dashboard-assets/img/theme/team-1.jpg' %}" class="avatar rounded ml-4" alt="Company" id="id_form_company">
+                            </div>
+                        </div>
+                        {% for error in form.company.errors %}
+                            <p class="small text-danger font-weight-light mb-0 mt-1">{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                    <div class="col-12 col-sm-6">
+                        
+                    </div>
+                </div>
+                
+                <div class="border-bottom mt-4"></div>
+
+                <h4 class="text-muted mb-4 font-weight-normal small mt-4">LOCATION</h4>
+                <div class="row mt-4">
+                    <div class="col-12 col-sm-6">
+                        <div class="form-group">
+                            <label for="id_state" class="form-control-label">State</label>
+                            {% render_field form.state class="form-control" data-toggle="select" title="State Select" data-placeholder="State"%}
+                        </div>
+                        {% for error in form.state.errors %}
+                            <p class="small text-danger font-weight-light mb-0 mt-1">{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                    <div class="col-12 col-sm-6">
+                        <div class="form-group">
+                            <label for="id_country" class="form-control-label">Country</label>
+                            {% render_field form.country class="form-control" data-toggle="select" title="Country Select" data-placeholder="Country"%}
+                        </div>
+                        {% for error in form.country.errors %}
+                            <p class="small text-danger font-weight-light mb-0 mt-1">{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="w-100 d-flex justify-content-end mt-5">
+                    <a href="{% url 'job:job-listing' %}" class="btn btn-secondary btn-sm px-5">Cancel</a>
+                    <button class="btn btn-primary btn-sm px-5" type="submit">Next</button>
+                </div>
+                
+
+            </form>
+        </div>
+    </div>
+
+    
+</div>
+
+
+
+
+{% endblock content %}
+
+{% block page_js %}
+<script src="{% static 'dashboard-assets/vendor/select2/dist/js/select2.min.js' %}"></script>
+
+<script>
+    $(document).ready(function(){ 
+        let company_img_preview = $('#id_preview_company_img')
+        let title_preview = $('#id_preview_title')
+        let state_preview = $('#id_preview_state')
+        let company_name_preview = $('#id_preview_company')
+        let employment_type_preview = $('#id_preview_employment_type')
+        let min_years_preview = $('#id_preview_min_years')
+        let level_preview = $('#id_preview_level')
+
+        let company_form_img = $('#id_company_form')
+
+        $('#id_title').keyup(function() {
+            let val = $(this).val()
+            if(val == '') {
+                title_preview.text('Junior Web Developer')
+            } else {
+                title_preview.text(val)
+            }
+        })
+
+        $('#id_state').change(function() {
+            let val = $('#select2-id_state-container').attr('title')
+            if (val == '') {
+                state_preview.text('Federal Territory of Kuala Lumpur')
+            } else {
+                state_preview.text(val)
+            }
+        })
+
+        $('#id_company').change(function() {
+            let val = $('#select2-id_company-container').attr('title')
+            if (val == '') {
+                company_name_preview.text('TalentAlps')
+            } else {
+                company_name_preview.text(val)
+            }
+        })
+
+        $('#id_employment_type').change(function() {
+            let val = $('#select2-id_employment_type-container').attr('title')
+            if (val == '') {
+                employment_type_preview.text('Full Time')
+            } else {
+                employment_type_preview.text(val)
+            }
+        })
+
+        $('#id_years_of_experience').keyup(function() {
+            let val = $(this).val()
+            if (val == '') {
+                min_years_preview.text('Min 2 Year(s)')
+            } else {
+                min_years_preview.text('Min ' + val + ' Year(s)')
+            }
+        })
+
+        $('#id_level').change(function() {
+            let val = $('#select2-id_level-container').attr('title')
+            if (val == '') {
+                level_preview.text('Junior')
+            } else {
+                level_preview.text(val)
+            }
+        })
+
+    });
+</script>
+
+{% endblock page_js %}
