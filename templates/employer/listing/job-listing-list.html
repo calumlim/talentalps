@@ -27,14 +27,27 @@ Job Listings
                     </nav>
                 </div>
             </div>
+            {% if object_list %}
             <a href="{% url 'job:job-listing-create' %}">
                 <button class="btn btn-cion btn-outline-white pl-3 pr-4 mt-4" type="button">
                     <span class="btn-inner--icon"><i class="ni ni-fat-add mr-1"></i></span>
                     <span class="btn-inner--text">Create Job Listing</span>
                 </button>
             </a>
+            {% endif %}
         </div>
     </div>
+</div>
+
+<div class="container">
+    {% for listing in object_list %}
+      
+    {% empty %}
+    <div class="px-5 d-flex flex-column align-items-center mt-5">
+        <img src="{% static 'dashboard-assets/img/placeholders/construction.svg' %}" alt="TalentAlps Job Listing" class="img-fluid" width="450px">
+        <p class="mt-4">Looks like there's nothing here, create a job listing <a href="{% url 'job:job-listing-create' %}">here!</a></p>
+    </div>
+    {% endfor %}
 </div>
 
 {% endblock content %}
