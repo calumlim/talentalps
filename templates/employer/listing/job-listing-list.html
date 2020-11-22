@@ -44,8 +44,9 @@ Job Listings
       
     {% empty %}
     <div class="px-5 d-flex flex-column align-items-center mt-5">
-        <img src="{% static 'dashboard-assets/img/placeholders/construction.svg' %}" alt="TalentAlps Job Listing" class="img-fluid" width="450px">
-        <p class="mt-4">Looks like there's nothing here, create a job listing <a href="{% url 'job:job-listing-create' %}">here!</a></p>
+        <img src="{% static 'dashboard-assets/img/placeholders/listing.svg' %}" alt="TalentAlps Job Listing" class="img-fluid mt-5" width="300px">
+        <p class="mt-4 text-center">Looks like there's nothing here yet!</p>
+        <a href="{% url 'job:job-listing-create' %}" class="btn btn-outline-primary mt-2">Create a Job Listing</a>
     </div>
     {% endfor %}
 </div>

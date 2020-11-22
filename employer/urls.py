@@ -19,10 +19,16 @@ job_applications_urlpatterns = [
     path('reviewed/', views.EmployerJobApplicationReviewedListView.as_view(), name='job-application-reviewed'),
 ]
 
+company_urlpatterns = [
+    path('', views.EmployerCompanyListView.as_view(), name='company-list'),
+    path('create/', views.EmployerCompanyCreateView.as_view(), name='company-create'),
+]
+
 urlpatterns = [
     path('login/', views.EmployerLoginView.as_view(), name='login'),
     path('dashboard/', views.EmployerDashboardView.as_view(), name='dashboard'),
     path('forgot-password/', include(forgot_password_urlpatterns)),
     path('reset-password/', include(reset_password_urlpatterns)),
     path('job-applications/', include(job_applications_urlpatterns)),
+    path('company/', include(company_urlpatterns)),
 ]

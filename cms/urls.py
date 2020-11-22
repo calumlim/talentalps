@@ -12,5 +12,5 @@ urlpatterns = [
     path('privacy-policy/', views.PrivacyPolicyView.as_view(), name='privacy-policy'),
     path('contact/', views.ContactView.as_view(), name='contact'),
     path('support/', views.SupportView.as_view(), name='support'),
-    
+    path('404/', views.ErrorView.as_view(), name='404'),
 ]

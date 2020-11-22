@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.views.generic import TemplateView, FormView
+from django.views.generic import TemplateView, FormView, ListView
 from django.urls import reverse, reverse_lazy
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
@@ -14,6 +14,8 @@ from django.core import mail
 from django.template.loader import render_to_string
 
 from . import forms
+from . import mixins
+from . import models
 
 # Create your views here.
 class LogInView(FormView):
@@ -131,3 +133,4 @@ class ResetPasswordView(FormView):
         to = user.email
 
         mail.send_mail(subject, message, from_email, [to], html_message=html_message)
+

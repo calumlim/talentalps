@@ -7,12 +7,17 @@ from talentalps.models import BaseModel
 from talentalps import constants
 
 def get_avatar_image_path(instance, filename):
+    filename = f"0{filename[filename.find('.'):]}"
     return f"{instance.user.username}/avatar/{filename}"
 def get_header_image_path(instance, filename):
+    filename = f"0{filename[filename.find('.'):]}"
     return f"{instance.user.username}/header/{filename}"
 def get_company_avatar_image_path(instance, filename):
+    filename = f"0{filename[filename.find('.'):]}"
+    print(filename)
     return f"employer/company/{instance.company_name}/avatar/{filename}"
 def get_company_header_image_path(instance, filename):
+    filename = f"0{filename[filename.find('.'):]}"
     return f"employer/company/{instance.company_name}/header/{filename}"
 
 # Create your models here.
@@ -102,20 +107,25 @@ class Company(BaseModel):
 
     avatar = models.ImageField(_('avatar'), upload_to=get_company_avatar_image_path, null=True, blank=True)
     company_name = models.CharField(_('company_name'), max_length=150)
-    description = models.TextField(_('description'), max_length=1200)
+    description = models.TextField(_('description'))
     website = models.CharField(_('website'), max_length=1000)
     company_size = models.CharField(_("company size"), max_length=50, choices=SIZE_CHOICES)
     company_type = models.CharField(_("type"), max_length=50, choices=TYPE_CHOICES)
-    founded = models.CharField(_("founded"), max_length=5)
-    header_image = models.ImageField(_("header image"), height_field=None, width_field=None, max_length=None, upload_to=get_company_header_image_path, null=True, blank=True)
-    industry = models.CharField(_("industry"), max_length=150, choices=constants.INDUSTRY)
+    founded = models.PositiveIntegerField(_("founded"))
+    header_image = models.ImageField(_("header image"), upload_to=get_company_header_image_path, null=True, blank=True)
+    industry = models.CharField(_("industry"), max_length=150)
     other_industry = models.CharField(_("other industry"), max_length=100, null=True, blank=True)
 
     address = models.CharField(_('address'), max_length=200, null=True, blank=True)
     postcode = models.PositiveIntegerField(_('postcode'), null=True, blank=True)
     state = models.CharField(_('state'), max_length=100, null=True, blank=True, choices=constants.STATE)
+    country = models.CharField(_('country'), max_length=100, null=True, blank=True, choices=constants.COUNTRY)
 
     userprofile = models.ForeignKey("UserProfile", verbose_name=_("user profile"), on_delete=models.PROTECT)
+
+    def __str__(self):
+        return f'{self.company_name}'
+
 
 class DailyStats(BaseModel):
     totaltraffic = models.PositiveIntegerField(_("total traffic"))

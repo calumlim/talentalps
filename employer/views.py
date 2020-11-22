@@ -12,9 +12,13 @@ from django.db import transaction
 from django.core import mail
 from django.template.loader import render_to_string
 from django.http import Http404
+from PIL import Image
+from django.core.files import File
+from django.db.models import Count, Case, When, Sum
 
 from user.forms import LogInForm
 from user import mixins
+from user import models as user_models
 from . import forms
 
 User = get_user_model()
@@ -148,3 +152,59 @@ class EmployerJobApplicationsPendingListView(TemplateView):
 
 class EmployerJobApplicationReviewedListView(TemplateView):
     template_name = 'employer/job-applications-reviewed-list.html'
+
+class EmployerCompanyListView(mixins.EmployerAccessMixin, ListView):
+    template_name = 'employer/company/company-list.html'
+
+    def get_queryset(self):
+        self.queryset = user_models.Company.objects.filter(userprofile=self.request.user.userprofile).annotate(
+            listing_count=Count(Case(When(joblisting__expired=False, then=1)))).annotate(
+                total_views=Sum('joblisting__views'))
+        return super().get_queryset()
+
+class EmployerCompanyCreateView(mixins.EmployerAccessMixin, FormView):
+    template_name = 'employer/company/company-create.html'
+    form_class = forms.CompanyCreateForm
+    success_url = reverse_lazy('employer:company-create')
+
+    def form_valid(self, form):
+        company = form.save(commit=False)
+        company.userprofile = self.request.user.userprofile
+
+        try:
+            with transaction.atomic():
+                company.save()
+                if company.avatar:
+                    # Cropping company logo then scaling it to a standard size of 400x400 following the 1/1 ratio
+                    logo_x = form.cleaned_data.get('logo_x')
+                    logo_y = form.cleaned_data.get('logo_y')
+                    logo_w = form.cleaned_data.get('logo_w')
+                    logo_h = form.cleaned_data.get('logo_h')
+                    
+                    if logo_x < 0 or logo_y < 0 or (logo_w/logo_h != 1):
+                        messages.error(self.request, _("An error occured while trying to crop the company logo, please try again."))
+                        return super().get(self.request)
+
+                    logo = Image.open(company.avatar.file)
+                    cropped_logo = logo.crop((logo_x, logo_y, logo_w+logo_x, logo_h+logo_y))
+                    resized_logo = cropped_logo.resize((400, 400), Image.ANTIALIAS)
+                    resized_logo.save(company.avatar.path)
+
+                if company.header_image:
+                    # Cropping company logo then scaling it to a standard size of 800x200 following the .25/1 ratio
+                    header_x = form.cleaned_data.get('header_x')
+                    header_y = form.cleaned_data.get('header_y')
+                    header_w = form.cleaned_data.get('header_w')
+                    header_h = form.cleaned_data.get('header_h')
+                    if header_x < 0 or header_y < 0 or round((header_h/header_w), 2) < 0.25:
+                        messages.error(self.request, _("An error occured while trying to crop the company logo, please try again."))
+                        return super().get(self.request)
+
+                    header = Image.open(company.header_image.file)
+                    cropped_header = header.crop((header_x, header_y, header_w+header_x, header_h+header_y))
+                    resized_header = cropped_header.resize((800, 200), Image.ANTIALIAS)
+                    resized_header.save(company.header_image.path)
+        except:
+            messages.error(self.request, _("An error occured while trying to create your company's profile, please try again or contact support."))
+            return super().get(self.request)
+        return super().form_valid(form)

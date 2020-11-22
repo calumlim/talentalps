@@ -2,7 +2,7 @@ version: "3"
    
 services:
   db:
-    image: postgres:9.6
+    image: postgres:12
     hostname: db
     environment:
       - POSTGRES_DB=talentalps
@@ -13,14 +13,27 @@ services:
     image: redis:6.0.9-alpine
     volumes:
       - redis_data:/data
+  
+  nginx:
+    build: ./nginx
+    ports:
+      - 1300:80
+    volumes:
+      - static_volume:/code/public/static
+      - media_volume:/code/media
+    depends_on:
+      - app
+    restart: "on-failure"
     
   app:
     restart: always
     build: .
     volumes: &talentalps_volumes
       - .:/code
+      - static_volume:/code/public/static
+      - media_volume:/code/media
     ports:
-      - "8000:8000"
+      - 8000:8000
     links: &talentalps_links
       - db
       - redis
@@ -34,9 +47,9 @@ services:
       SECRET_KEY: secret
       ALLOWED_HOSTS: '*'
       # Postgres variables
-      DB_NAME: talentalps
-      DB_USER: talentalps
-      DB_PASS: talentalps
+      DB_NAME: postgres
+      DB_USER: postgres
+      DB_PASS: 
       DB_HOST: db
       DB_PORT: 5432
       # DigitalOcean Spaces
@@ -59,3 +72,5 @@ services:
 
 volumes: 
   redis_data:
+  static_volume:
+  media_volume:

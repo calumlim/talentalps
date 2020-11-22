@@ -1,0 +1,161 @@
+{% extends '../employer-base.html' %}
+{% load static humanize %}
+{% block title %}
+Companies
+{% endblock title %}
+
+{% block page_css %}
+<link rel="stylesheet" href="{% static 'dashboard-assets/vendor/datatables.net-bs4/css/dataTables.bootstrap4.min.css' %}" type="text/css">
+<link rel="stylesheet" href="{% static 'dashboard-assets/vendor/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css' %}" type="text/css">
+<link rel="stylesheet" href="{% static 'dashboard-assets/vendor/datatables.net-select-bs4/css/select.bootstrap4.min.css' %}" type="text/css">
+{% endblock page_css %}
+
+{% block content %}
+
+<div class="header bg-primary pb-6">
+    <div class="container-fluid">
+        <div class="header-body">
+            <div class="row align-items-center py-4">
+                <div class="col-lg-6 col-7">
+                    <h6 class="h2 text-white d-inline-block mb-0">Companies</h6>
+                    <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
+                        <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
+                        <li class="breadcrumb-item"><a href="{% url 'employer:dashboard' %}"><i class="fas fa-home"></i></a></li>
+                        <li class="breadcrumb-item"><a href="{% url 'employer:dashboard' %}">Dashboard</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Companies</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+            {% if object_list %}
+            <a href="{% url 'employer:company-create' %}">
+                <button class="btn btn-cion btn-outline-white pl-3 pr-4 mt-4" type="button">
+                    <span class="btn-inner--icon"><i class="ni ni-fat-add mr-1"></i></span>
+                    <span class="btn-inner--text">Create New Company</span>
+                </button>
+            </a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% if object_list %}
+    <div class="row px-md-4 px-2 mt-n4">
+    
+    {% for company in object_list %}
+    
+        <div class="col-12 col-md-6">
+            <div class="card mx-1">
+                <div class="card-body pb-1">
+                    <div class="d-flex">
+                        {% if company.avatar %}
+                            <img src="{{ company.avatar.url }}" alt="{{ company.company_name }} Logo" class="img-fluid avatar rounded bg-transparent">
+                        {% else %}
+                            <img src="{% static 'placeholders/office.svg' %}" alt="Office" class="img-fluid avatar rounded bg-transparent">
+                        {% endif %}
+                        <div class="ml-3 d-flex flex-column justify-content-center">
+                            <h2 class="m-0">{{ company.company_name }}</h2>
+                            <p class="small font-weight-light mb-0">
+                                {% if company.state %}
+                                    {{ company.get_state_display }},
+                                {% endif %} {{ company.get_country_display }}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="row px-3 mt-4">
+                        <div class="px-4 py-0 border-left border-right col-sm-4 col-12 mt-2">
+                            <p class="small mb-0">Published Jobs</p>
+                            <h4 class="mb-0">{{ company.listing_count }}</h4>
+                        </div>
+                        <div class="px-4 py-0 border-right col-sm-4 col-12 mt-2">
+                            <p class="small mb-0">Job Views</p>
+                            {% if company.total_views %}
+                                <h4 class="mb-0">{{ company.total_views }}</h4>
+                            {% else %} 
+                                <h4 class="mb-0">0</h4>
+                            {% endif %}
+                        </div>
+                        <div class="px-4 py-0 border-right col-sm-4 col-12 mt-2">
+                            <p class="small mb-0">Commends</p>
+                            <h4 class="mb-0">0</h4>
+                        </div>
+                    </div>
+
+                    <div class="mt-5" id="id_profile_menu_{{ company.pk }}" style="display: none;">
+                        <p class="small text-gray">Options</p>
+                        <div class="list-group">
+                            <div class="d-flex">
+                                <a href="#" class="list-group-item list-group-item-action border-top-0 border-bottom-0 small rounded-0">Edit Company</a>
+                                <a href="#" class="list-group-item list-group-item-action border-top-0 border-bottom-0 border-left-0 small rounded-0">Company Images</a>
+                            </div>
+                            <a href="#" class="list-group-item list-group-item-action border-top-0 border-bottom-0 small rounded-0 text-danger">
+                                Delete Company Profile
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-center mt-2">
+                        <a href="" class="p-2 text-gray" id="id_maximize_button_{{ company.pk }}" onclick="
+                                event.preventDefault();
+                                $('#id_profile_menu_{{ company.pk }}').fadeIn('fast');
+                                $('#id_minimize_button_{{ company.pk }}').fadeIn('fast');
+                                $(this).fadeOut(0)
+                            ">
+                            <i class="fas fa-chevron-down fa-1x"></i>
+                        </a>
+                        <a href="" class="p-2 text-gray" id="id_minimize_button_{{ company.pk }}" onclick="
+                                event.preventDefault();
+                                $('#id_profile_menu_{{ company.pk }}').fadeOut(0);
+                                $('#id_maximize_button_{{ company.pk }}').fadeIn(0);
+                                $(this).fadeOut(0)
+                            " style="display: none;">
+                            <i class="fas fa-chevron-down fa-1x" id="id_option_button_{{ company.pk }}" style="transform: scaleY(-1);"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    {% endfor %}
+    </div>
+{% else %}
+<div class="container">
+    <div class="px-5 d-flex flex-column align-items-center mt-5">
+        <img src="{% static 'dashboard-assets/img/placeholders/profiles.svg' %}" alt="TalentAlps Job Listing" class="img-fluid mt-5" width="350px">
+        <p class="mt-4 text-center">Looks like you have no company profiles yet!</p>
+        <a href="{% url 'employer:company-create' %}" class="btn btn-outline-primary mt-2">Create a Company</a>
+    </div>
+    {% endif %}
+</div>
+
+{% endblock content %}
+
+{% block page_js %}
+<script src="{% static 'dashboard-assets/vendor/datatables.net/js/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'dashboard-assets/vendor/datatables.net-bs4/js/dataTables.bootstrap4.min.js' %}"></script>
+<script src="{% static 'dashboard-assets/vendor/datatables.net-buttons/js/dataTables.buttons.min.js' %}"></script>
+<script src="{% static 'dashboard-assets/vendor/datatables.net-buttons-bs4/js/buttons.bootstrap4.min.js' %}"></script>
+<script src="{% static 'dashboard-assets/vendor/datatables.net-buttons/js/buttons.html5.min.js' %}"></script>
+<script src="{% static 'dashboard-assets/vendor/datatables.net-buttons/js/buttons.flash.min.js' %}"></script>
+<script src="{% static 'dashboard-assets/vendor/datatables.net-buttons/js/buttons.print.min.js' %}"></script>
+<script src="{% static 'dashboard-assets/vendor/datatables.net-select/js/dataTables.select.min.js' %}"></script>
+
+<script>
+    $(document).ready(function(){ 
+        var options = {
+            pageLength: 25,
+            order: [[2, 'desc']],
+            language: {
+            paginate: {
+                previous: "<i class='fas fa-angle-left'>",
+                next: "<i class='fas fa-angle-right'>"
+            }
+            },
+            responsive: true,
+            scrollX: true,
+        };
+        $('#myTable').DataTable(options)
+    });
+</script>
+
+{% endblock page_js %}

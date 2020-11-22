@@ -15,21 +15,23 @@ class JobListing(BaseModel):
     title = models.CharField(_("title"), max_length=100)
     state = models.CharField(_("state"), max_length=80, choices=constants.STATE)
     country = models.CharField(_("country"), max_length=80, choices=constants.COUNTRY)
-    industry = models.CharField(_("industry"), max_length=80, choices=constants.INDUSTRY)
+    industry = models.CharField(_("industry"), max_length=500)
     employment_type = models.CharField(_("employment type"), max_length=60, choices=constants.EMPLOYMENT_TYPE_CHOICES)
-    description = RichTextField(config_name='job_listing_editor', max_length=1800)
+    description = RichTextField(config_name='job_listing_editor')
     level = models.CharField(_("level"), max_length=50, choices=constants.LEVEL)
-    job_functions = models.CharField(_("job functions"), max_length=80, choices=constants.JOB_FUNCTIONS)
+    job_functions = models.CharField(_("job functions"), max_length=500)
     pay_from = models.DecimalField(_("pay_from"), max_digits=8, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))])
     pay_to = models.DecimalField(_("pay_to"), max_digits=8, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))])
     years_of_experience = models.PositiveIntegerField(_("years of experience"))
-    keywords = ArrayField(ArrayField(models.CharField(_("keywords"), max_length=80)), size=10)
     recommended = models.BooleanField(_("recommended"), default=False)
-    recommended_start_timestamp: models.DateTimeField(_("recommended start timestamp"), auto_now=False, auto_now_add=False, null=True, blank=True)
-    views = models.PositiveIntegerField(_("views"))
+    recommended_start_timestamp = models.DateTimeField(_("recommended start timestamp"), auto_now=False, auto_now_add=False, null=True, blank=True)
+    views = models.PositiveIntegerField(_("views"), default=0)
     expired = models.BooleanField(_("expired"), default=False)
 
     company = models.ForeignKey("user.Company", verbose_name=_("company"), on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f'{self.title} ({self.company})'
 
     def increase_view(self):
         self.views += 1

@@ -68,7 +68,7 @@
 .choices[data-type*="select-one"],
 .choices[data-type*="select-multiple"] {
   .choices__input--cloned {
-    display: none;
+    // display: none;
   }
 }
 
@@ -144,8 +144,8 @@
 
 .choices__inner {
   font-size: .875rem;
-  height: calc(1.5em + 1.25rem + 2px);
-  padding: .625rem .75rem;
+  height: calc(1.75em + 1.25rem + 2px);
+  padding: .625rem 1rem .625rem .75rem;
   line-height: 1.5;
   display: block;
   width: 100%;
@@ -207,14 +207,15 @@
 .choices__list--multiple .choices__item {
   display: inline-block;
   vertical-align: middle;
-  border-radius: 20px;
+  border-radius: 5px;
   padding: 2px 10px;
   font-size: 12px;
   font-weight: 500;
   margin-right: 3.75px;
   margin-bottom: 0;
-  color: #00BCD4;
+  color: #0084FF;
   word-break: break-all;
+  background-color: #DDEEFF;
 }
 
 .choices__list--multiple .choices__item[data-deletable] {
@@ -244,7 +245,6 @@
   position: absolute;
   width: 100%;
   display: block;
-  margin-top: 10px;
   z-index: 999;
   bottom: unset !important;
   top: 100% !important;
@@ -252,22 +252,9 @@
           animation: fpFadeInDown 300ms cubic-bezier(0.23, 1, 0.32, 1);
   transform: none !important;
   transition: $transition-collapse;
-  @include box-shadow($dropdown-box-shadow);
-
-  &:before {
-    background: $white;
-    box-shadow: none;
-    content: "";
-    display: block;
-    height: 16px;
-    width: 16px;
-    right: 15px;
-    position: absolute;
-    bottom: 100%;
-    transform: rotate(-45deg) translateY(1rem);
-    z-index: -5;
-    border-radius: .2rem;
-  }
+  border-left: 1px solid $gray-300;
+  border-right: 1px solid $gray-300;
+  border-bottom: 1px solid $gray-300;
 }
 
 .is-flipped .choices__list--dropdown {
@@ -280,14 +267,13 @@
 
 .choices__list--dropdown .choices__list {
   position: relative;
-  max-height: 300px;
   overflow-y: scroll;
   -webkit-overflow-scrolling: touch;
   will-change: scroll-position;
 }
 
 .choices__list--dropdown .choices__item {
-  padding: 1rem;
+  padding: 0.5rem 1rem;
   font-size: $font-size-sm;
 }
 
@@ -441,6 +427,7 @@
   }
   .choices__button:after {
     color: $default !important;
+
   }
 }
 

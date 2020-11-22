@@ -4,6 +4,9 @@ from django.urls import include
 from . import views
 
 app_name = 'user'
+
+
+
 urlpatterns = [
     path('logout/', views.LogOut, name='logout'),
     path('reset-password/', views.ResetPasswordEmailView.as_view(), name='reset-password-email'),

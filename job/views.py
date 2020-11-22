@@ -3,6 +3,7 @@ from django.views.generic import ListView, CreateView, FormView
 from django.urls import reverse, reverse_lazy
 
 from user import mixins
+from user import models as user_models
 from . import models
 from . import forms
 
@@ -18,9 +19,15 @@ class EmployerJobListingListView(mixins.EmployerAccessMixin, ListView):
 
 class EmployerJobListingCreateView(mixins.EmployerAccessMixin, FormView):
     template_name = 'employer/listing/job-listing-create.html'
-    # model = models.JobListing
-    # fields = ['title', 'state', 'country', 'industry', 'employment_type',
-    # 'level', 'specialisation', 'qualifications', 'pay_from', 'pay_to', 'years_of_experience',
-    # 'company']
     form_class = forms.JobListingCreateForm
     success_url = reverse_lazy('job:job-listing')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['company_logos'] = user_models.Company.objects.only('company_name', 'avatar', 'pk')
+        return context
+    
+    def form_valid(self, form):
+        # gotta set expiry with celery here
+        form.save()
+        return super().form_valid(form)

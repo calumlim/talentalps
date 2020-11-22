@@ -151,32 +151,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 
-# Moving static assets to DigitalOcean Spaces as per:
-# https://www.digitalocean.com/community/tutorials/how-to-set-up-object-storage-with-django
-AWS_ACCESS_KEY_ID = config('STATIC_ACCESS_KEY_ID')
-AWS_SECRET_ACCESS_KEY = config('STATIC_SECRET_KEY')
-
-AWS_STORAGE_BUCKET_NAME = config('STATIC_BUCKET_NAME')
-AWS_S3_ENDPOINT_URL = config('STATIC_ENDPOINT_URL')
-AWS_QUERYSTRING_AUTH = config('STATIC_QUERYSTRING_AUTH', default=False, cast=bool)
-AWS_S3_OBJECT_PARAMETERS = {
-    'CacheControl': 'max-age=86400',
-}
-AWS_LOCATION = 'static'
-AWS_DEFAULT_ACL = 'public-read'
-
-if AWS_ACCESS_KEY_ID != "":
-    STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-    STATIC_URL = f"{AWS_S3_ENDPOINT_URL}/{AWS_LOCATION}/"
-    MEDIA_URL = f"{AWS_S3_ENDPOINT_URL}/{AWS_LOCATION}/media/"
-else:
-    STATIC_URL = '/static/'
-    MEDIA_URL = '/media/'
-
-STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
-
-
 # Logging Configuration
 
 # Clear prev config
@@ -234,8 +208,11 @@ STATICFILES_FINDERS = [
 ]
 
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
+STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 STATIC_ROOT = os.path.join(BASE_DIR, 'public/static/')
-STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static/'),)
+STATIC_URL = '/static/'
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
 SASS_PROCESSOR_ENABLED = True
 

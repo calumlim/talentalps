@@ -1,5 +1,8 @@
 from django import forms
 
+from user import models as user_models
+from talentalps import constants
+
 class ForgotPasswordForm(forms.Form):
     email = forms.EmailField(required=True)
 
@@ -36,3 +39,29 @@ class ResetPasswordForm(forms.Form):
             raise forms.ValidationError("Passwords do not match!")
 
         return confirm_password
+
+class CompanyCreateForm(forms.ModelForm):
+    logo_x = forms.FloatField(required=False, widget=(forms.HiddenInput()))
+    logo_y = forms.FloatField(required=False, widget=(forms.HiddenInput()))
+    logo_w = forms.FloatField(required=False, widget=(forms.HiddenInput()))
+    logo_h = forms.FloatField(required=False, widget=(forms.HiddenInput()))
+    header_x = forms.FloatField(required=False, widget=(forms.HiddenInput()))
+    header_y = forms.FloatField(required=False, widget=(forms.HiddenInput()))
+    header_w = forms.FloatField(required=False, widget=(forms.HiddenInput()))
+    header_h = forms.FloatField(required=False, widget=(forms.HiddenInput()))
+
+    class Meta:
+        model = user_models.Company
+        fields = ['avatar', 'header_image', 'company_name', 'description', 'website',
+        'company_size', 'company_type', 'founded', 'industry', 'other_industry', 'address',
+        'postcode', 'state', 'country']
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['other_industry'].required = False
+        self.fields['website'].required = False
+        self.fields['industry'] = forms.MultipleChoiceField(choices=constants.INDUSTRY)
+        self.fields['country'].initial = 'MY'
+    
+    def clean_industry(self):
+        return ', '.join(self.cleaned_data.get('industry'))

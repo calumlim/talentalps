@@ -27,3 +27,6 @@ def LoginRedirect(request):
     elif (request.user.is_authenticated and not request.user.is_employer):
         return redirect('cms:home')
     return redirect('cms:home')
+
+class ErrorView(TemplateView):
+    template_name = '404.html'

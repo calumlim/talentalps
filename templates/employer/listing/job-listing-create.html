@@ -1,11 +1,12 @@
 {% extends '../employer-base.html' %}
-{% load static humanize widget_tweaks %}
+{% load static humanize widget_tweaks sass_tags %}
 {% block title %}
 Create Job Listing
 {% endblock title %}
 
 {% block page_css %}
 <link rel="stylesheet" href="{% static 'dashboard-assets/vendor/select2/dist/css/select2.min.css' %}">
+<link rel="stylesheet" href="{% sass_src 'cms-assets/scss/argon-design-system.scss' %}">
 
 <style>
     @media screen and (min-width: 1199px) {
@@ -35,7 +36,7 @@ Create Job Listing
                         <li class="breadcrumb-item"><a href="{% url 'employer:dashboard' %}"><i class="fas fa-home"></i></a></li>
                         <li class="breadcrumb-item"><a href="{% url 'employer:dashboard' %}">Dashboard</a></li>
                         <li class="breadcrumb-item"><a href="{% url 'job:job-listing' %}">Job Listings</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Create Job Listings</li>
+                        <li class="breadcrumb-item active" aria-current="page">Create Job Listing</li>
                         </ol>
                     </nav>
                 </div>
@@ -54,78 +55,49 @@ Create Job Listing
 
         <div class="card-body py-5 px-sm-4 px-3">
             <div class="row">
-    
-                <form method='post' class="mt-5 px-4 col-xl-8 col-12 order-2 order-xl-1">
+                
+                <form method='post' class="mt-5 px-4 col-xl-7 col-12 order-2 order-xl-1">
                     {% csrf_token %}
                     <h4 class="text-muted mb-4 font-weight-normal small">JOB INFORMATION</h4>
                     
                     <div class="row mt-4">
                         <div class="col-12 col-sm-6">
                             <div class="form-group">
-                                <label for="id_title" class="form-control-label">Title</label>
+                                <label for="id_title" class="form-control-label">Title <span class="text-danger">*</span></label>
                                 {% render_field form.title class="form-control" placeholder="Junior Web Developer" %}
+                                <p class="small text-danger font-weight-light mb-0 mt-1">{{ form.title.errors | striptags }}</p>
                             </div>
-                            {% for error in form.title.errors %}
-                                <p class="small text-danger font-weight-light mb-0 mt-1">{{ error }}</p>
-                            {% endfor %}
                         </div>
                         <div class="col-12 col-sm-6">
                             <div class="form-group">
-                                <label for="id_level" class="form-control-label">Seniority Level</label>
+                                <label for="id_level" class="form-control-label">Seniority Level <span class="text-danger">*</span></label>
                                 {% render_field form.level class="form-control" data-toggle="select" title="Seniority Level Select" data-placeholder="Seniority Level" %}
+                                <p class="small text-danger font-weight-light mb-0 mt-1">{{ form.level.errors | striptags }}</p>
                             </div>
-                            {% for error in form.level.errors %}
-                                <p class="small text-danger font-weight-light mb-0 mt-1">{{ error }}</p>
-                            {% endfor %}
-                        </div>
-                    </div>
-                    
-                    <div class="row mt-2">
-                        <div class="col-12 col-sm-6">
-                            <div class="form-group">
-                                <label for="id_industry" class="form-control-label">Industry</label>
-                                {% render_field form.industry class="form-control" data-toggle="select" multiple="" %}
-                            </div>
-                            {% for error in form.industry.errors %}
-                                <p class="small text-danger font-weight-light mb-0 mt-1">{{ error }}</p>
-                            {% endfor %}
-                        </div>
-                        <div class="col-12 col-sm-6">
-                            <div class="form-group">
-                                <label for="id_employment_type" class="form-control-label">Employment Type</label>
-                                {% render_field form.employment_type class="form-control" data-toggle="select" title="Employment Type Select" data-placeholder="Employment Type" %}
-                            </div>
-                            {% for error in form.employment_type.errors %}
-                                <p class="small text-danger font-weight-light mb-0 mt-1">{{ error }}</p>
-                            {% endfor %}
                         </div>
                     </div>
     
                     <div class="row mt-2">
+
                         <div class="col-12 col-sm-6">
                             <div class="form-group">
-                                <div class="form-group">
-                                    <label for="id_job_functions" class="form-control-label">Job Functions</label>
-                                    {% render_field form.job_functions class="form-control" data-toggle="select" multiple="" %}
-                                </div>
-                                {% for error in form.job_functions.errors %}
-                                    <p class="small text-danger font-weight-light mb-0 mt-1">{{ error }}</p>
-                                {% endfor %}
+                                <label for="id_employment_type" class="form-control-label">Employment Type <span class="text-danger">*</span></label>
+                                {% render_field form.employment_type class="form-control" data-toggle="select" title="Employment Type Select" data-placeholder="Employment Type" %}
+                                <p class="small text-danger font-weight-light mb-0 mt-1">{{ form.employment_type.errors | striptags }}</p>
                             </div>
                         </div>
+                        
                         <div class="col-12 col-sm-6">
                             <div class="form-group">
-                                <label for="id_years_of_experience" class="form-control-label">Minimum Year(s) of Experience <i class="fas fa-info-circle text-gray ml-2" data-toggle="tooltip" data-placement="top" title="Set years of experience to 0 if you're accepting fresh graduates."></i></label>
+                                <label for="id_years_of_experience" class="form-control-label">Minimum Year(s) of Experience <span class="text-danger">*</span> <i class="fas fa-info-circle text-gray ml-2" data-toggle="tooltip" data-placement="top" title="Set years of experience to 0 if you're accepting fresh graduates."></i></label>
                                 <div class="input-group">
                                     {% render_field form.years_of_experience class="form-control" %}
                                     <div class="input-group-append">
                                         <span class="input-group-text" id="id_years_of_experience">Year(s)</span>
                                     </div>
                                 </div>
+                                <p class="small text-danger font-weight-light mb-0 mt-1">{{ form.years_of_experience.errors | striptags }}</p>
                             </div>
-                            {% for error in form.years_of_experience.errors %}
-                                <p class="small text-danger font-weight-light mb-0 mt-1">{{ error }}</p>
-                            {% endfor %}
                         </div>
                     </div>
                     
@@ -140,10 +112,8 @@ Create Job Listing
                                     </div>
                                     {% render_field form.pay_from class="form-control" placeholder="0.00" %}
                                 </div>
+                                <p class="small text-danger font-weight-light mb-0 mt-1">{{ form.pay_from.errors | striptags }}</p>
                             </div>
-                            {% for error in form.pay_from.errors %}
-                                <p class="small text-danger font-weight-light mb-0 mt-1">{{ error }}</p>
-                            {% endfor %}
                         </div>
                         <div class="col-12 col-sm-6">
                             <div class="form-group">
@@ -154,10 +124,26 @@ Create Job Listing
                                     </div>
                                     {% render_field form.pay_to class="form-control" placeholder="0.00" %}
                                 </div>
+                                <p class="small text-danger font-weight-light mb-0 mt-1">{{ form.pay_to.errors | striptags }}</p>
                             </div>
-                            {% for error in form.pay_to.errors %}
-                                <p class="small text-danger font-weight-light mb-0 mt-1">{{ error }}</p>
-                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="row mt-2">
+                        <div class="col-12 col-sm-6">
+                            <div class="form-group">
+                                <label for="id_industry" class="form-control-label">Industry <span class="text-danger">*</span></label>
+                                {% render_field form.industry class="form-control" multiple="" data-trigger="" %}
+                                <p class="small text-danger font-weight-light mb-0 mt-1">{{ form.industry.errors | striptags }}</p>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-sm-6">
+                            <div class="form-group">
+                                <label for="id_job_functions" class="form-control-label">Job Functions <span class="text-danger">*</span></label>
+                                {% render_field form.job_functions class="form-control" multiple="" data-trigger=""  %}
+                                <p class="small text-danger font-weight-light mb-0 mt-1">{{ form.job_functions.errors | striptags }}</p>
+                            </div>
                         </div>
                     </div>
     
@@ -165,20 +151,20 @@ Create Job Listing
     
                     <h4 class="text-muted mb-4 font-weight-normal small mt-4">COMPANY INFORMATION</h4>
                     <div class="row mt-4">
-                        <div class="col-12 col-sm-6">
+                        <div class="col-12">
                             <div class="form-group">
-                                <label for="id_company" class="form-control-label">Company</label>
+                                <label for="id_company" class="form-control-label">Company <span class="text-danger">*</span></label>
                                 <div class="d-flex">
                                     {% render_field form.company class="form-control" data-toggle="select" title="Company Select" data-placeholder="Company"%}
-                                    <img src="{% static 'dashboard-assets/img/theme/team-1.jpg' %}" class="avatar rounded ml-4" alt="Company" id="id_form_company">
+                                    {% for company in company_logos %}
+                                        {% if company.avatar %}
+                                            <img src="{{ company.avatar.url }}" alt="{{ company.company_name }}" class="avatar rounded ml-4" id="id_company_preview_form_{{ company.pk }}" style="display: none;">
+                                        {% endif %}
+                                    {% endfor %}
+                                    <img src="{% static 'placeholders/office.svg' %}" class="avatar rounded ml-4 bg-transparent" alt="Company" id="id_form_company">
                                 </div>
+                                <p class="small text-danger font-weight-light mb-0 mt-1">{{ form.company.errors | striptags }}</p>
                             </div>
-                            {% for error in form.company.errors %}
-                                <p class="small text-danger font-weight-light mb-0 mt-1">{{ error }}</p>
-                            {% endfor %}
-                        </div>
-                        <div class="col-12 col-sm-6">
-                            
                         </div>
                     </div>
                     
@@ -190,31 +176,27 @@ Create Job Listing
                             <div class="form-group">
                                 <label for="id_state" class="form-control-label">State</label>
                                 {% render_field form.state class="form-control" data-toggle="select" title="State Select" data-placeholder="State"%}
+                                <p class="small text-danger font-weight-light mb-0 mt-1">{{ form.state.errors | striptags }}</p>
                             </div>
-                            {% for error in form.state.errors %}
-                                <p class="small text-danger font-weight-light mb-0 mt-1">{{ error }}</p>
-                            {% endfor %}
                         </div>
                         <div class="col-12 col-sm-6">
                             <div class="form-group">
-                                <label for="id_country" class="form-control-label">Country</label>
+                                <label for="id_country" class="form-control-label">Country <span class="text-danger">*</span></label>
                                 {% render_field form.country class="form-control" data-toggle="select" title="Country Select" data-placeholder="Country"%}
+                                <p class="small text-danger font-weight-light mb-0 mt-1">{{ form.country.errors | striptags }}</p>
                             </div>
-                            {% for error in form.country.errors %}
-                                <p class="small text-danger font-weight-light mb-0 mt-1">{{ error }}</p>
-                            {% endfor %}
                         </div>
                     </div>
     
                     <div class="w-100 d-flex justify-content-end mt-5">
-                        <a href="{% url 'job:job-listing' %}" class="btn btn-secondary btn-sm px-5">Cancel</a>
-                        <button class="btn btn-primary btn-sm px-5" type="submit">Next</button>
+                        <a href="{% url 'job:job-listing' %}" class="btn btn-outline-secondary px-5">Cancel</a>
+                        <button class="btn btn-success px-5" type="submit">Next</button>
                     </div>
                     
     
                 </form>
 
-                <div class="d-flex flex-column justify-content-center align-items-center mt-2 col-xl-4 col-12 order-1 order-xl-2 border-left">
+                <div class="d-flex flex-column justify-content-center align-items-center mt-2 col-xl-5 col-12 order-1 order-xl-2 border-left">
 
                     <!-- Fake card -->
                     <div class="card mb-3 d-none d-xl-block" style="width: 370px; z-index: 1050;">
@@ -238,15 +220,22 @@ Create Job Listing
                         <!-- Live Preview -->
                         <div class="card-body position-relative p-4 h-100">
                             <i class="fas fa-ellipsis-v position-absolute right-3 text-gray opacity-5"></i>
-                            <img src="{% static 'dashboard-assets/img/theme/team-1.jpg' %}" class="avatar-lg rounded" alt="Company" id="id_preview_company_img">
+                            {% for company in company_logos %}
+                                {% if company.avatar %}
+                                    <img src="{{ company.avatar.url }}" alt="{{ company.company_name }}" class="avatar-lg rounded" id="id_company_preview_example_{{ company.pk }}" style="display: none;">
+                                {% endif %}
+                            {% endfor %}
+                            <img src="{% static 'placeholders/office.svg' %}" class="avatar-lg rounded" alt="Company" id="id_preview_company_img">
                             <p class="mb-0 mt-2 font-weight-normal" id="id_preview_title">Junior Web Developer</p>
-                            <p class="mb-0 small font-weight-light mt-2" id="id_preview_state">Federal Territory of Kuala Lumpur</p>
-                            <p class="mb-0 small font-weight-light" id="id_preview_company">TalentAlps</p>
+                            <span class="mb-0 small font-weight-light mt-2" id="id_preview_state">Federal Territory of Kuala Lumpur, </span>
+                            <span class="mb-0 small font-weight-light mt-2" id="id_preview_country">MY</span>
+
+                            <p class="mb-0 small font-weight-light" id="id_preview_company">{{ company_logos.0.company_name }}</p>
                 
                             <div class="d-inline-block mt-5 position-absolute bottom-5">
                                 <span class="badge font-weight-normal py-2 px-3 text-primary mr-1" style="background-color: #DDEEFF; text-transform: none;" id="id_preview_employment_type">Full Time</span>
                                 <span class="badge font-weight-normal py-2 px-3 text-primary mr-1" style="background-color: #DDEEFF; text-transform: none;" id="id_preview_min_years">Min 2 Year(s)</span>
-                                <span class="badge font-weight-normal py-2 px-3 text-primary mr-1" style="background-color: #DDEEFF; text-transform: none;" id="id_preview_level">Junior</span>
+                                <span class="badge font-weight-normal py-2 px-3 text-primary mr-1" style="background-color: #DDEEFF; text-transform: none;" id="id_preview_level">Entry Level</span>
                             </div>
                             <p class="mb-0 mt-2 small font-weight-lighter text-gray opacity-7 position-absolute bottom-3">1 day ago</p>
                         </div>
@@ -279,8 +268,6 @@ Create Job Listing
         </div>
     </div>
     
-    
-
 </div>
 
 
@@ -288,22 +275,60 @@ Create Job Listing
 
 {% block page_js %}
 <script src="{% static 'dashboard-assets/vendor/select2/dist/js/select2.min.js' %}"></script>
+<script src="{% static 'cms-assets/js/plugins/choices.min.js' %}"></script>
 
 <script>
     $(document).ready(function(){ 
-        let company_img_preview = $('#id_preview_company_img')
+        let company_example_preview = $('#id_preview_company_img')
+        let company_form_preview = $('#id_form_company')
         let title_preview = $('#id_preview_title')
         let state_preview = $('#id_preview_state')
         let company_name_preview = $('#id_preview_company')
         let employment_type_preview = $('#id_preview_employment_type')
         let min_years_preview = $('#id_preview_min_years')
         let level_preview = $('#id_preview_level')
+        let country_preview = $('#id_preview_country')
 
         let company_form_img = $('#id_company_form')
 
         let card_preview = $('#id_card_preview')
         let hide_preview_button = $('#id_hide_preview')
         let show_preview_button = $('#id_show_preview')
+
+        // Activate Choices.js
+        const industry_choices = new Choices('#id_industry', {
+            placeholder: true,
+            placeholderValue: 'Search Industry',
+            searchFloor: 2,
+            searchResultLimit: 6,
+            maxItemCount: 4,
+            delimiter: ',',
+            editItems: false,
+            removeItemButton: true,
+            loadingText: 'Loading...',
+            noResultsText: 'Nothing to see here...',
+            noChoicesText: 'No more industries to choose from',
+        });
+
+        const job_function_choices = new Choices('#id_job_functions', {
+            placeholder: true,
+            placeholderValue: 'Search Function',
+            searchFloor: 2,
+            searchResultLimit: 6,
+            maxItemCount: 4,
+            delimiter: ',',
+            editItems: false,
+            removeItemButton: true,
+            loadingText: 'Loading...',
+            noResultsText: 'Nothing to see here...',
+            noChoicesText: 'No more job functions to choose from',
+        });
+
+        function changePreviewText(e, t) {
+            e.fadeOut(1)
+            e.text(t)
+            e.fadeIn('fast')
+        }
 
         hide_preview_button.on('click', function(e) {
             e.preventDefault()
@@ -318,64 +343,140 @@ Create Job Listing
             show_preview_button.addClass('d-none')
             hide_preview_button.removeClass('d-none')
         })
-
-        $('#id_title').keyup(function() {
-            let val = $(this).val()
+        
+        function change_title() {
+            let val = $('#id_title').val()
             if(val == '') {
                 title_preview.text('Junior Web Developer')
             } else {
                 title_preview.text(val)
             }
+        }
+
+        function change_state() {
+            let val = $('#select2-id_state-container').attr('title') + ','
+            if (val == 'undefined,' || val == '') {
+                changePreviewText(state_preview, 'Federal Territory of Kuala Lumpur,')
+            } else {
+                changePreviewText(state_preview, val)
+                if (country_preview.text() != 'MY') {
+                    state_preview.fadeOut(0)
+                }
+            }
+        }
+
+        function change_company() {
+            let val = $('#select2-id_company-container').attr('title')
+
+            $('[id^=id_company_preview_example_]').each(function () {
+                $(this).fadeOut(0)
+            })
+            $('[id^=id_company_preview_form_]').each(function () {
+                $(this).fadeOut(0)
+            })
+
+            let preview_example = $('#id_company_preview_example_' + $('#id_company').val())
+            let preview_form = $('#id_company_preview_form_' + $('#id_company').val())
+
+            if (preview_example.length != 0) {
+                preview_example.fadeIn('fast')
+                preview_form.fadeIn('fast')
+                company_example_preview.fadeOut(0)
+                company_form_preview.fadeOut(0)
+            } else {
+                company_example_preview.fadeIn('fast')
+                company_form_preview.fadeIn('fast')
+            }
+
+            if (val == '') {
+                changePreviewText(company_name_preview, '{{ company_logos.0.company_name }}')
+            } else {
+                changePreviewText(company_name_preview, val)
+            }
+        }
+
+        function change_employment_type() {
+            let val = $('#select2-id_employment_type-container').attr('title')
+            if (val == '') {
+                changePreviewText(employment_type_preview, 'Full Time')
+            } else {
+                changePreviewText(employment_type_preview, val)
+            }
+        }
+
+        function change_years_of_experience() {
+            let val = $('#id_years_of_experience').val()
+            if (val == '0') {
+                min_years_preview.fadeOut('fast')
+            } else if (val == '') {
+                min_years_preview.fadeIn('fast')
+                min_years_preview.text('Min 2 Year(s)')
+            } else {
+                min_years_preview.fadeIn('fast')
+                min_years_preview.text('Min ' + val + ' Year(s)')
+            }
+        }
+
+        function change_level() {
+            let val = $('#select2-id_level-container').attr('title')
+            if (val == '') {
+                changePreviewText(level_preview, 'Entry Level')
+            } else {
+                changePreviewText(level_preview, val)
+            }
+        }
+
+        function change_country() {
+            let val = $('#id_country').val()
+            let title = $('#select2-id_country-container').attr('title')
+            if (val == '') {
+                changePreviewText(country_preview, 'MY')
+            } else {
+                if (val != 'MY') {
+                    state_preview.fadeOut(0)
+                    changePreviewText(country_preview, title)
+                } else {
+                    state_preview.fadeIn('fast')
+                    changePreviewText(country_preview, val)
+                }
+            }
+        }
+
+        // Run through the "Live Preview" functions once to update in case of form invalid
+        change_title()
+        change_state()
+        change_company()
+        change_employment_type()
+        change_years_of_experience()
+        change_level()
+        change_country()
+
+        $('#id_title').keyup(function ur_mum() {
+            change_title()
         })
 
         $('#id_state').change(function() {
-            let val = $('#select2-id_state-container').attr('title')
-            if (val == '') {
-                state_preview.text('Federal Territory of Kuala Lumpur')
-            } else {
-                state_preview.text(val)
-            }
+            change_state()
         })
 
         $('#id_company').change(function() {
-            let val = $('#select2-id_company-container').attr('title')
-            if (val == '') {
-                company_name_preview.text('TalentAlps')
-            } else {
-                company_name_preview.text(val)
-            }
+            change_company()
         })
 
         $('#id_employment_type').change(function() {
-            let val = $('#select2-id_employment_type-container').attr('title')
-            if (val == '') {
-                employment_type_preview.text('Full Time')
-            } else {
-                employment_type_preview.text(val)
-            }
+            change_employment_type()
         })
 
         $('#id_years_of_experience').bind('change keyup input', function() {
-            let val = $(this).val()
-            console.log(val)
-            if (val == '0') {
-                min_years_preview.addClass('d-none')
-            } else if (val == '') {
-                min_years_preview.removeClass('d-none')
-                min_years_preview.text('Min 2 Year(s)')
-            } else {
-                min_years_preview.removeClass('d-none')
-                min_years_preview.text('Min ' + val + ' Year(s)')
-            }
+            change_years_of_experience()
         })
 
-        $('#id_level').change(function() {
-            let val = $('#select2-id_level-container').attr('title')
-            if (val == '') {
-                level_preview.text('Junior')
-            } else {
-                level_preview.text(val)
-            }
+        $('#id_level').bind('change', function() {
+            change_level()
+        })
+
+        $('#id_country').bind('change', function() {
+            change_country()
         })
 
     });

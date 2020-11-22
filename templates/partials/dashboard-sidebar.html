@@ -6,8 +6,8 @@
     <div class="scrollbar-inner">
       <!-- Brand -->
       <div class="sidenav-header  d-flex  align-items-center">
-        <a class="navbar-brand" href="{% url 'employer:dashboard' %}">
-          <img src="{% static 'cms-assets/img/brand/logo_for_bright_bg.png' %}" class="navbar-brand-img ml-4" alt="TalentAlps" style="height: 18px; width: auto;">
+        <a class="navbar-brand py-1" href="{% url 'employer:dashboard' %}">
+          <img src="{% static 'cms-assets/img/brand/logo_with_icon.png' %}" class="navbar-brand-img ml-0" alt="TalentAlps" style="height: 22px; ">
         </a>
         <div class=" ml-auto ">
           <!-- Sidenav toggler -->
@@ -20,7 +20,7 @@
           </div>
         </div>
       </div>
-      <div class="navbar-inner">
+      <div class="navbar-inner mt-n3">
         <!-- Collapse -->
         <div class="collapse navbar-collapse" id="sidenav-collapse-main">
           <!-- Nav items -->
@@ -32,7 +32,7 @@
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">
+              <a class="nav-link" href="{% url 'employer:company-list' %}">
                 <i class="ni ni-building text-orange"></i>
                 <span class="nav-link-text">Companies</span>
               </a>
@@ -100,15 +100,21 @@
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="https://demos.creative-tim.com/argon-dashboard-pro/docs/foundation/colors.html" target="_blank">
+              <a class="nav-link" href="">
                 <i class="ni ni-single-copy-04"></i>
                 <span class="nav-link-text">Terms & Condition</span>
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="https://demos.creative-tim.com/argon-dashboard-pro/docs/components/alerts.html" target="_blank">
+              <a class="nav-link" href="">
                 <i class="ni ni-collection"></i>
                 <span class="nav-link-text">Privacy Policy</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'cms:home' %}">
+                <i class=""></i>
+                <p class="nav-link-text small">&copy; 2020 <span class="text-primary">TalentAlps</span></p>
               </a>
             </li>
           </ul>
@@ -116,7 +122,5 @@
       </div>
     </div>
 
-
-    <span class="nav-link-text fixed-bottom small mb-4 ml-5">&copy; 2020 <a href="{% url 'cms:home' %}" class="text-primary">TalentAlps</a></span>
 
   </nav>
