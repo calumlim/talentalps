@@ -5,19 +5,25 @@ from django.core.validators import MinValueValidator
 from ckeditor.fields import RichTextField
 
 from decimal import Decimal
+import uuid
+import datetime
 
 from django.contrib.auth.models import User
 from talentalps.models import BaseModel
 from talentalps import constants
+from . import tasks
 
 # Create your models here.
 class JobListing(BaseModel):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     title = models.CharField(_("title"), max_length=100)
     state = models.CharField(_("state"), max_length=80, choices=constants.STATE)
     country = models.CharField(_("country"), max_length=80, choices=constants.COUNTRY)
     industry = models.CharField(_("industry"), max_length=500)
     employment_type = models.CharField(_("employment type"), max_length=60, choices=constants.EMPLOYMENT_TYPE_CHOICES)
     description = RichTextField(config_name='job_listing_editor')
+    responsibilities_description = RichTextField(config_name='job_listing_editor')
+    requirements_description = RichTextField(config_name='job_listing_editor')
     level = models.CharField(_("level"), max_length=50, choices=constants.LEVEL)
     job_functions = models.CharField(_("job functions"), max_length=500)
     pay_from = models.DecimalField(_("pay_from"), max_digits=8, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(Decimal('0.00'))])
@@ -26,16 +32,22 @@ class JobListing(BaseModel):
     recommended = models.BooleanField(_("recommended"), default=False)
     recommended_start_timestamp = models.DateTimeField(_("recommended start timestamp"), auto_now=False, auto_now_add=False, null=True, blank=True)
     views = models.PositiveIntegerField(_("views"), default=0)
+    expiry_date = models.DateTimeField(_("expiry date"), default=datetime.datetime.now() + datetime.timedelta(days=30))
     expired = models.BooleanField(_("expired"), default=False)
+    published = models.BooleanField(_("published"), default=False)
 
     company = models.ForeignKey("user.Company", verbose_name=_("company"), on_delete=models.CASCADE)
+    userprofile = models.ForeignKey("user.UserProfile", verbose_name=_("user profile"), on_delete=models.CASCADE)
 
     def __str__(self):
         return f'{self.title} ({self.company})'
+    
+    @property
+    def get_job_applications_count(self):
+        return JobApplication.objects.filter(joblisting__pk=self.pk).count()
 
     def increase_view(self):
-        self.views += 1
-        self.save()
+        tasks.increase_view(self.pk)
 
 class JobApplication(BaseModel):
     STATUS_PENDING = 'pending'
@@ -74,15 +86,18 @@ class Interview(BaseModel):
     jobapplication = models.ForeignKey("JobApplication", verbose_name=_("job application"), on_delete=models.CASCADE)
 
 class Questionnaire(BaseModel):
-    title = models.CharField(_("title"), max_length=100)
-    description = models.TextField(_("description"), max_length=500)
-
     joblisting = models.OneToOneField("JobListing", verbose_name=_("job listing"), on_delete=models.CASCADE)
 
+    def __str__(self):
+        return f"{self.joblisting}"
+
 class Question(BaseModel):
-    question = models.TextField(_("question"), max_length=300)
+    question = models.TextField(_("question"), max_length=120, blank=True)
 
     questionnaire = models.ForeignKey("Questionnaire", verbose_name=_("questionnaire"), on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.question} - {self.questionnaire.joblisting}"
 
 class CandidateQuestionnaireAnswer(BaseModel):
     question = models.TextField(_("question"), max_length=300)

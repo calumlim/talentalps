@@ -23,6 +23,7 @@ django-ckeditor = "==5.6.1"
 celery = "==5.0"
 django-allauth = "==0.43.0"
 django-sequences = "==2.5"
+redis = "==3.5.3"
 
 [requires]
 python_version = "3.8"

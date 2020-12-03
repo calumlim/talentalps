@@ -99,14 +99,10 @@ class EmployerRegisterView(FormView):
                 )
                 user.set_password(form.cleaned_data.get('password'))
                 user.save()
-
-                userprofile = UserProfile.objects.create(
-                    name=form.cleaned_data.get('name'),
-                    is_employer=True,
-                    user=user,
-                    receive_updates = form.cleaned_data.get('receive_updates')
-                )
-
+                userprofile = user.userprofile
+                userprofile.is_employer = True
+                userprofile.receive_updates = form.cleaned_data.get('receive_updates')
+                userprofile.save()
 
                 token_generator = PasswordResetTokenGenerator()
                 token = token_generator.make_token(user)

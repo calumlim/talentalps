@@ -325,6 +325,7 @@ INDUSTRY = {
     ('Transport & Logistics', 'Transport & Logistics'),
     ('Telecommunications', 'Telecommunications'),
     ('Airline/Aviation', 'Airline/Aviation'),
+    ('Other', 'other'),
 }
 
 JOB_FUNCTIONS = {

@@ -1,36 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="325.205" height="270" viewBox="0 0 325.205 270">
-  <defs>
-    <filter id="Polygon_3" x="25" y="0" width="275" height="240" filterUnits="userSpaceOnUse">
-      <feOffset input="SourceAlpha"/>
-      <feGaussianBlur result="blur"/>
-      <feFlood flood-opacity="0.161"/>
-      <feComposite operator="in" in2="blur"/>
-      <feComposite in="SourceGraphic"/>
-    </filter>
-    <filter id="Path_100" x="91.855" y="59.176" width="233.35" height="210.824" filterUnits="userSpaceOnUse">
-      <feOffset dx="-5" input="SourceAlpha"/>
-      <feGaussianBlur stdDeviation="10" result="blur-2"/>
-      <feFlood flood-opacity="0.161"/>
-      <feComposite operator="in" in2="blur-2"/>
-      <feComposite in="SourceGraphic"/>
-    </filter>
-    <filter id="Polygon_1" x="0" y="34" width="263" height="236" filterUnits="userSpaceOnUse">
-      <feOffset dx="5" input="SourceAlpha"/>
-      <feGaussianBlur stdDeviation="10" result="blur-3"/>
-      <feFlood flood-opacity="0.161"/>
-      <feComposite operator="in" in2="blur-3"/>
-      <feComposite in="SourceGraphic"/>
-    </filter>
-  </defs>
-  <g id="Group_91" data-name="Group 91" transform="translate(-448 -158.537)">
-    <g transform="matrix(1, 0, 0, 1, 448, 158.54)" filter="url(#Polygon_3)">
-      <path id="Polygon_3-2" data-name="Polygon 3" d="M137.5,0,275,240H0Z" transform="translate(25)" fill="#def"/>
-    </g>
-    <g transform="matrix(1, 0, 0, 1, 448, 158.54)" filter="url(#Path_100)">
-      <path id="Path_100-2" data-name="Path 100" d="M86.675,0,173.35,150.824H0Z" transform="translate(126.86 89.18)" fill="#2b3990"/>
-    </g>
-    <g transform="matrix(1, 0, 0, 1, 448, 158.54)" filter="url(#Polygon_1)">
-      <path id="Polygon_1-2" data-name="Polygon 1" d="M101.5,0,203,176H0Z" transform="translate(25 64)" fill="#0084ff"/>
-    </g>
+<svg xmlns="http://www.w3.org/2000/svg" width="311.001" height="199.001" viewBox="0 0 311.001 199.001">
+  <g id="Group_100" data-name="Group 100" transform="translate(-957 -691)">
+    <path id="Polygon_4" data-name="Polygon 4" d="M114.5,0,229,199H0Z" transform="translate(957 691)" fill="#0084ff"/>
+    <path id="Subtraction_2" data-name="Subtraction 2" d="M256,3664H184l-56-97.392L164,3504l92,160Z" transform="translate(1012 -2774)" fill="#2b3990"/>
   </g>
 </svg>

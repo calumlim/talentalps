@@ -2,23 +2,28 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.postgres.fields import ArrayField
 
+import uuid
+import os
+
 from django.contrib.auth.models import User
 from talentalps.models import BaseModel
 from talentalps import constants
 
 def get_avatar_image_path(instance, filename):
-    filename = f"0{filename[filename.find('.'):]}"
-    return f"{instance.user.username}/avatar/{filename}"
+    filename = f"{uuid.uuid4()}{os.path.splitext(filename)[1]}"
+    return f"user/{instance.pk}/avatar/{filename}"
 def get_header_image_path(instance, filename):
-    filename = f"0{filename[filename.find('.'):]}"
-    return f"{instance.user.username}/header/{filename}"
+    filename = f"{uuid.uuid4()}{os.path.splitext(filename)[1]}"
+    return f"user/{instance.pk}/header/{filename}"
 def get_company_avatar_image_path(instance, filename):
-    filename = f"0{filename[filename.find('.'):]}"
-    print(filename)
-    return f"employer/company/{instance.company_name}/avatar/{filename}"
+    filename = f"{uuid.uuid4()}{os.path.splitext(filename)[1]}"
+    return f"employer/company/{instance.pk}/avatar/{filename}"
 def get_company_header_image_path(instance, filename):
-    filename = f"0{filename[filename.find('.'):]}"
-    return f"employer/company/{instance.company_name}/header/{filename}"
+    filename = f"{uuid.uuid4()}{os.path.splitext(filename)[1]}"
+    return f"employer/company/{instance.pk}/header/{filename}"
+def get_company_gallery_image_path(instance, filename):
+    filename = f"{uuid.uuid4()}{os.path.splitext(filename)[1]}"
+    return f"employer/company/{instance.company.pk}/gallery/{filename}"
 
 # Create your models here.
 class UserProfile(BaseModel):
@@ -59,6 +64,7 @@ class Candidate(BaseModel):
         (SEEKING_LOOKING, _('Just looking around')),
     )
 
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     gender = models.CharField(_('gender'), max_length=10, choices=constants.GENDER)
     state = models.CharField(_('state'), max_length=100, choices=constants.STATE)
     nationality = models.CharField(_('nationality'), max_length=50, choices=constants.COUNTRY, default='MY')
@@ -105,6 +111,18 @@ class Company(BaseModel):
         (TYPE_FOREIGN, 'Foreign Company'),
     )
 
+    STATUS_PENDING = 'pending'
+    STATUS_ACTIVE = 'active'
+    STATUS_INACTIVE = 'inactive'
+    STATUS_SUSPENDED = 'suspended'
+    STATUS_CHOICES = (
+        (STATUS_PENDING, 'Pending'),
+        (STATUS_ACTIVE, 'Active'),
+        (STATUS_INACTIVE, 'Inactive'),
+        (STATUS_SUSPENDED, 'Suspended'),
+    )
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     avatar = models.ImageField(_('avatar'), upload_to=get_company_avatar_image_path, null=True, blank=True)
     company_name = models.CharField(_('company_name'), max_length=150)
     description = models.TextField(_('description'))
@@ -120,11 +138,33 @@ class Company(BaseModel):
     postcode = models.PositiveIntegerField(_('postcode'), null=True, blank=True)
     state = models.CharField(_('state'), max_length=100, null=True, blank=True, choices=constants.STATE)
     country = models.CharField(_('country'), max_length=100, null=True, blank=True, choices=constants.COUNTRY)
+    status = models.CharField(_("status"), max_length=100, default=STATUS_PENDING, choices=STATUS_CHOICES)
+    registration_no = models.CharField(_("registration_no"), max_length=150)
 
     userprofile = models.ForeignKey("UserProfile", verbose_name=_("user profile"), on_delete=models.PROTECT)
 
     def __str__(self):
         return f'{self.company_name}'
+
+class CompanyImage(BaseModel):
+    image = models.ImageField(_("image"), upload_to=get_company_gallery_image_path)
+    order = models.PositiveIntegerField(_("order"))
+
+    company = models.ForeignKey("Company", verbose_name=_("company"), on_delete=models.CASCADE)
+
+    class Meta:
+        ordering = ['order']
+
+    def __str__(self):
+        return f'#{self.pk} - ({self.company.company_name})'
+        
+    def delete(self, *args, **kwargs):
+        self.image.delete(save=False)
+        super().delete(*args, **kwargs)
+    
+    def set_next_order(self):
+        self.order = self.company.companyimage_set.count() + 1
+
 
 
 class DailyStats(BaseModel):

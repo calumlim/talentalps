@@ -1,0 +1,165 @@
+{% extends '../employer-base.html' %}
+{% load static humanize widget_tweaks sass_tags %}
+{% block title %}
+{{ object.title }} - Description
+{% endblock title %}
+
+{% block page_css %}
+<style>
+    .django-ckeditor-widget {
+        width: 100%;
+    }
+    #cke_id_description, #cke_id_responsibilities_description, #cke_id_requirements_description {
+        width: auto !important;
+    }
+    .cke_bottom { 
+        display: none !important;
+    }
+
+</style>
+{% endblock page_css %}
+
+{% block content %}
+
+<div class="header bg-primary pb-6">
+    <div class="container-fluid">
+        <div class="header-body">
+            <div class="row align-items-center py-4">
+                <div class="col-lg-6 col-7">
+                    <h6 class="h2 text-white d-inline-block mb-0">Edit Description</h6>
+                    <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
+                        <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
+                        <li class="breadcrumb-item"><a href="{% url 'employer:dashboard' %}"><i class="fas fa-home"></i></a></li>
+                        <li class="breadcrumb-item"><a href="{% url 'employer:dashboard' %}">Dashboard</a></li>
+                        <li class="breadcrumb-item"><a href="{% url 'job:job-listing' %}">Job Listings</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Edit Description</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+            <div class="container mt-4">
+                <a href="{% url 'job:job-listing' %}" class="mb-0 text-white top-4"> <i class="fas fa-caret-left ml-2 mr-2"></i> Back</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="container mt-n2 d-flex justify-content-center">
+
+    <!-- Editing Form -->
+    <div class="card mt-n5 position-relative w-100" style="max-width: 1200px;">
+        <div class="card-body py-5 px-sm-4 px-3">
+            <form method='post' class="px-4" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form.media }}
+
+                <div class="row align-items-center">
+                    <div class="col-sm-6 col-8">
+                        <h2 class="m-0">Description<p class="text-gray mb-0">{{ object.title }}</p></h2>
+                    </div>
+                    <div class="d-flex justify-content-end col-sm-6 col-4">
+                    {% if object.company.avatar %}
+                        <img src="{{ object.company.avatar.url }}" alt="{{ object.company.company_title }} Logo" class="ml-4 avatar img-fluid rounded NO-CACHE">
+                    {% else %}
+                        <img src="{% static 'placeholders/office.svg' %}" alt="{{ object.company.company_title }} Logo" class="ml-4 avatar-sm img-fluid rounded NO-CACHE">
+                    {% endif %}
+                    </div>
+                </div>
+                    
+                    
+                <div class="border-bottom mt-4"></div>
+
+                <label for="id_description" class="font-weight-normal mt-4 mb-0 text-gray-dark">Job Description</label>
+                <p class="small"><span class="small font-weight-light text-gray mb-0">Elaborate more about this job position or your company {{ object.company.company_name }}.</span></p>
+                <div class="row">
+                    <div class="col-12 col-md-7 order-md-1 order-2 mt-2">
+                        {% render_field form.description class="form-control" %}
+                        <p class="small font-weight-light text-danger mt-2">{{ form.description.errors | striptags }}</p>
+                    </div>
+                    <div class="col-12 col-md-5 border-left order-md-2 order-1 mt-2">
+                        <div class="d-flex flex-column justify-content-center align-items-start h-100">
+                            <p class="text-gray font-weight-normal mb-0">Example Job Description</p>
+                            <i class="text-gray small font-weight-light">- Junior Web Developer</i>
+                            <p class="text-gray font-weight-light small mt-4">Here at <b>______________</b>, we are looking for a dynamic <b>Junior Web Developer</b> to join our team. You will be assisting with website builds, 
+                                implementing new design features, and working to ensure that the underlying structure of a client's website is correct. 
+                                You will be taking direction from senior developers and assisting with all aspects of website and application design.<br><br>
+                                To ensure success as a junior web developer, you need to possess excellent website design skills and meticulous attention to detail. 
+                                Ultimately, a top-notch junior web developer should be able to work well under pressure in a highly technical environment.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="border-bottom mt-4"></div>
+
+                <label for="id_responsibilities_description" class="font-weight-normal mt-4 mb-0 text-gray-dark">Job Responsibilities <span class="text-danger">*</span></label>
+                <p class="small"><span class="small font-weight-light text-gray mb-0">Elaborate more about this job's responsibilities.</span></p>
+                <div class="row">
+                    <div class="col-12 col-md-7 order-md-1 order-2 mt-2">
+                        {% render_field form.responsibilities_description class="form-control" %}
+                        <p class="small font-weight-light text-danger mt-2">{{ form.responsibilities_description.errors | striptags }}</p>
+                    </div>
+                    <div class="col-12 col-md-5 border-left order-md-2 order-1 mt-2">
+                        <div class="d-flex flex-column justify-content-center align-items-start h-100">
+                            <p class="text-gray font-weight-normal mb-0">Example Job Responsibilities</p>
+                            <i class="text-gray small font-weight-light">- Junior Web Developer</i>
+                            <ul class="mt-4 pl-4">
+                                <li class="small font-weight-light text-gray mt-2">Assisting the web development team with all aspects of website and application design.</li>
+                                <li class="small font-weight-light text-gray mt-2">Assisting with the testing and maintenance of backend and front end applications.</li>
+                                <li class="small font-weight-light text-gray mt-2">Brainstorming new tech applications such as digital storage and mobile technology.</li>
+                                <li class="small font-weight-light text-gray mt-2">Collaborating with developers to implement new web features.</li>
+                                <li class="small font-weight-light text-gray mt-2">Keeping up-to-date with the latest technology and programming trends.</li>
+                                <li class="small font-weight-light text-gray mt-2">Converting video, audio, written, and graphic components into compatible formats for the web.</li>
+                                <li class="small font-weight-light text-gray mt-2">Using user feedback to identify and correct problems with a client's website.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="border-bottom mt-4"></div>
+
+                <label for="id_requirements_description" class="font-weight-normal mt-4 mb-0 text-gray-dark">Job Requirements <span class="text-danger">*</span></label>
+                <p class="small"><span class="small font-weight-light text-gray mb-0">Elaborate more about this job's requirements and requisites.</span></p>
+                <div class="row">
+                    <div class="col-12 col-md-7 order-md-1 order-2 mt-2">
+                        {% render_field form.requirements_description class="form-control" %}
+                        <p class="small font-weight-light text-danger mt-2">{{ form.requirements_description.errors | striptags }}</p>
+                    </div>
+                    <div class="col-12 col-md-5 border-left order-md-2 order-1 mt-2">
+                        <div class="d-flex flex-column justify-content-center align-items-start h-100">
+                            <p class="text-gray font-weight-normal mb-0">Example Job Requirements</p>
+                            <i class="text-gray small font-weight-light">- Junior Web Developer</i>
+                            <ul class="mt-4 pl-4">
+                                <li class="small font-weight-light text-gray mt-2">A Bachelor's degree in information technology, computer science, or a similar field.</li>
+                                <li class="small font-weight-light text-gray mt-2">At least 1 year working experience as a junior web developer.</li>
+                                <li class="small font-weight-light text-gray mt-2">Experience working with coding languages such as HTML, Python JQuery, JSOn, and Ajax.</li>
+                                <li class="small font-weight-light text-gray mt-2">Solid understanding of web design and development principles.</li>
+                                <li class="small font-weight-light text-gray mt-2">Good planning, analytical, and decision-making skills.</li>
+                                <li class="small font-weight-light text-gray mt-2">A portfolio of web design and projects you've worked on.</li>
+                                <li class="small font-weight-light text-gray mt-2">Critical-thinking skills.</li>
+                                <li class="small font-weight-light text-gray mt-2">Flexibility in the workplace.</li>
+                                <li class="small font-weight-light text-gray mt-2">In-depth knowledge of software prototyping and UX design tools.</li>
+                                <li class="small font-weight-light text-gray mt-2">Goal-orientated and deadline-driven.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="w-100 d-flex justify-content-end mt-5">
+                    <a href="{% url 'job:job-listing' %}" class="font-weight-light small pt-1 px-5">Cancel</a>
+                    <button class="btn btn-primary btn-sm px-5" type="submit" id="id_submit_button">Save</button>
+                </div>
+                
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
+
+{% block page_js %}
+
+{% endblock page_js %}

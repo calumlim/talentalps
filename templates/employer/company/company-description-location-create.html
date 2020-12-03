@@ -1,0 +1,123 @@
+{% extends '../employer-base.html' %}
+{% load static humanize widget_tweaks sass_tags %}
+{% block title %}
+Create Company - Description & Location
+{% endblock title %}
+
+{% block page_css %}
+<link rel="stylesheet" href="{% static 'dashboard-assets/vendor/select2/dist/css/select2.min.css' %}">
+<link rel="stylesheet" href="{% sass_src 'cms-assets/scss/argon-design-system.scss' %}">
+{% endblock page_css %}
+
+{% block content %}
+
+<div class="header bg-primary pb-6">
+    <div class="container-fluid">
+        <div class="header-body">
+            <div class="row align-items-center py-4">
+                <div class="col-lg-6 col-7">
+                    <h6 class="h2 text-white d-inline-block mb-0">Create Company</h6>
+                    <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
+                        <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
+                        <li class="breadcrumb-item"><a href="{% url 'employer:dashboard' %}"><i class="fas fa-home"></i></a></li>
+                        <li class="breadcrumb-item"><a href="{% url 'employer:dashboard' %}">Dashboard</a></li>
+                        <li class="breadcrumb-item"><a href="{% url 'employer:company-list' %}">Companies</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Create Company</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+            <div class="container mt-4">
+                <a href="{% url 'employer:company-list' %}" class="mb-0 text-white top-4"> <i class="fas fa-caret-left ml-2 mr-2"></i> Back</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="container mt-n2 d-flex justify-content-center">
+
+    <!-- Editing Form -->
+    <div class="card mt-n5 position-relative w-100" style="max-width: 1200px;">
+        <div class="card-body py-5 px-sm-4 px-3">
+            <form method='post' class="px-4" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="d-flex align-items-center">
+                    <h2 class="m-0">{{ view.object.company_name }}</h2>
+                    {% if view.object.avatar %}
+                        <img src="{{ view.object.avatar.url }}" alt="{{ view.object.company_name }}" class="avatar-sm rounded ml-4">
+                    {% else %}
+                        <img src="{% static 'placeholders/office.svg' %}" alt="{{ view.object.company_name }}" class="avatar-sm rounded ml-4">
+                    {% endif %}
+                </div>
+
+                <div class="border-bottom mt-4"></div>
+
+                <div class="row mt-4">
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label for="id_description">Description <span class="text-danger">*</span></label>
+                            {% render_field form.description class="form-control" placeholder="Provide a summary for your company" rows="5" %}
+                            <p class="small text-danger font-weight-light mb-0 mt-1">{{ form.description.errors | striptags }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="border-bottom mt-5"></div>
+
+                <h4 class="text-muted mb-4 font-weight-normal small mt-4">LOCATION</h4>
+
+                <div class="row">
+                    <div class="col-12 col-sm-6">
+                        <div class="form-group">
+                            <label for="id_address">Address</label>
+                            {% render_field form.address class="form-control" placeholder="" %}
+                            <p class="small text-danger font-weight-light mb-0 mt-1">{{ form.address.errors | striptags }}</p>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-sm-6">
+                        <div class="form-group">
+                            <label for="id_postcode">Postcode</label>
+                            {% render_field form.postcode class="form-control" placeholder="" %}
+                            <p class="small text-danger font-weight-light mb-0 mt-1">{{ form.postcode.errors | striptags }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-12 col-sm-6">
+                        <div class="form-group">
+                            <label for="id_state">State</label>
+                            {% render_field form.state class="form-control" data-toggle="select" title="State Select" data-placeholder="State" %}
+                            <p class="small text-danger font-weight-light mb-0 mt-1">{{ form.state.errors | striptags }}</p>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6">
+                        <div class="form-group">
+                            <label for="id_country">Country <span class="text-danger">*</span></label>
+                            {% render_field form.country class="form-control" data-toggle="select" title="Country Select" data-placeholder="Country" %}
+                            <p class="small text-danger font-weight-light mb-0 mt-1">{{ form.country.errors | striptags }}</p>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="w-100 d-flex justify-content-end mt-5">
+                    <a href="{% url 'employer:company-list' %}" class="font-weight-light small pt-1 px-5">Cancel</a>
+                    <button class="btn btn-success btn-sm px-5" type="submit">Next</button>
+                </div>
+                
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
+
+{% block page_js %}
+<script src="{% static 'dashboard-assets/vendor/select2/dist/js/select2.min.js' %}"></script>
+<script src="{% static 'cms-assets/js/plugins/choices.min.js' %}"></script>
+
+{% endblock page_js %}

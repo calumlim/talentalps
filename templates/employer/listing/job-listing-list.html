@@ -29,7 +29,7 @@ Job Listings
             </div>
             {% if object_list %}
             <a href="{% url 'job:job-listing-create' %}">
-                <button class="btn btn-cion btn-outline-white pl-3 pr-4 mt-4" type="button">
+                <button class="btn btn-cion btn-primary pl-3 pr-4 mt-4" type="button">
                     <span class="btn-inner--icon"><i class="ni ni-fat-add mr-1"></i></span>
                     <span class="btn-inner--text">Create Job Listing</span>
                 </button>
@@ -39,17 +39,115 @@ Job Listings
     </div>
 </div>
 
-<div class="container">
-    {% for listing in object_list %}
-      
-    {% empty %}
-    <div class="px-5 d-flex flex-column align-items-center mt-5">
-        <img src="{% static 'dashboard-assets/img/placeholders/listing.svg' %}" alt="TalentAlps Job Listing" class="img-fluid mt-5" width="300px">
-        <p class="mt-4 text-center">Looks like there's nothing here yet!</p>
-        <a href="{% url 'job:job-listing-create' %}" class="btn btn-outline-primary mt-2">Create a Job Listing</a>
+{% if object_list %}
+<!-- DataTables -->
+<div class="table-responsive px-4 mx-2 mt-n5">
+    <div class="card py-4">
+        <table class="table table-flush w-100" id="myTable">
+            <thead class="thead-light">
+                <tr>
+                    <th>Job Title</th>
+                    <th>Company Name</th>
+                    <th>Created</th>
+                    <th>Valid Until</th>
+                    <th>Total Views</th>
+                    <th>Job Applications</th>
+                    <th>State/Country</th>
+                    <th>Level</th>
+                    <th>Employment Type</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for listing in object_list %}
+                <tr>
+                    <td>
+                    {% if listing.expired %}
+                    <span class="text-gray">{{ listing.title }}</span>
+                    {% else %}
+                    {{ listing.title }}
+                    {% endif %}
+                    <span class="badge badge-dot ml-2">
+                        {% if listing.published %}
+                        <i class="bg-success my-1" data-toggle="tooltip" data-placement="right" title="Published"></i>
+                        {% endif %}
+                        {% if listing.expired %}
+                        <i class="bg-gray my-1" data-toggle="tooltip" data-placement="right" title="Expired"></i>
+                        {% endif %}
+                      </span><br>
+                        {% if listing.expired %}
+                        <span class="small font-weight-light text-gray opacity-5">- Edit Description</span><br>
+                        <span class="small font-weight-light text-gray opacity-5">- 
+                            {% if listing.questionnaire.question_set.all %}
+                                Edit
+                            {% else %}
+                                Create
+                            {% endif %}
+                            Questionnaire
+                        </span>
+                        {% else %}
+                      
+                        - <a href="{% url 'job:job-listing-description-edit' listing.pk %}" class="small font-weight-light">Edit Description</a><br>
+                        - <a href="{% url 'job:questionnaire-edit' listing.pk %}" class="small font-weight-light">
+                            {% if listing.questionnaire.question_set.all %}
+                                Edit
+                            {% else %}
+                                Create
+                            {% endif %}
+                            Questionnaire
+                        </a>
+                        {% endif %}
+                    </td>
+                    <td class="d-flex align-items-center">
+                        {% if listing.company.avatar %}
+                        <img src="{{ listing.company.avatar.url }}" alt="{{ listing.company.company_name }} Logo" class="avatar avatar-xs mr-2">
+                        {% else %}
+                        <img src="{% static 'placeholders/office.svg' %}" alt="{{ listing.company.company_name }} Logo" class="avatar avatar-xs mr-2">
+                        {% endif %}
+                        {{ listing.company.company_name }}
+                    </td>
+                    <td>{{ listing.created_at | timesince }} ago</td>
+                    <td>{{ listing.expiry_date | date:'d M Y' }} </td>
+                    <td>{{ listing.views | intcomma }}</td>
+                    <td>{{ listing.get_job_applications_count | intcomma }}</td>
+                    <td>
+                        {% if listing.state %}
+                        {{ listing.get_state_display }},
+                        {% endif %}
+                        {{ listing.country }}</td>
+                    <td>
+                        <span class="badge font-weight-normal py-2 px-3 text-primary mr-1" style="background-color: #DDEEFF; text-transform: none; font-size: 80%;">
+                        {{ listing.get_level_display }}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="badge font-weight-normal py-2 px-3 text-primary mr-1" style="background-color: #DDEEFF; text-transform: none; font-size: 80%;">
+                            {{ listing.get_employment_type_display }}
+                        </span>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
-    {% endfor %}
 </div>
+
+{% else %}
+<div class="container">
+    {% if request.user.userprofile.company_set.all %}
+        <div class="px-5 d-flex flex-column align-items-center mt-5">
+            <img src="{% static 'placeholders/post.svg' %}" alt="TalentAlps Job Listing" class="img-fluid mt-5" width="230px">
+            <p class="mt-4 text-center text-gray">No job listings yet, create one now!</p>
+            <a href="{% url 'job:job-listing-create' %}" class="btn btn-outline-primary mt-2">Create a Job Listing</a>
+        </div>
+    {% else %}
+        <div class="px-5 d-flex flex-column align-items-center mt-5">
+            <img src="{% static 'placeholders/product_tour.svg' %}" alt="TalentAlps Job Listing" class="img-fluid mt-5" width="300px">
+            <p class="mt-4 text-center text-gray">Looks like you haven't created any company profiles yet!</p>
+            <a href="{% url 'employer:company-create' %}" class="btn btn-outline-primary mt-2">Create a Company Profile</a>
+        </div>
+    {% endif %}
+</div>
+{% endif %}
 
 {% endblock content %}
 
@@ -67,7 +165,7 @@ Job Listings
     $(document).ready(function(){ 
         var options = {
             pageLength: 25,
-            order: [[2, 'desc']],
+            order: [[2, 'asc']],
             language: {
             paginate: {
                 previous: "<i class='fas fa-angle-left'>",

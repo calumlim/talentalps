@@ -22,6 +22,10 @@ job_applications_urlpatterns = [
 company_urlpatterns = [
     path('', views.EmployerCompanyListView.as_view(), name='company-list'),
     path('create/', views.EmployerCompanyCreateView.as_view(), name='company-create'),
+    path('create/description/location/<str:pk>/', views.EmployerCompanyDescriptionLocationCreateView.as_view(), name='company-description-location-create'),
+    path('img/<str:pk>/', views.EmployerCompanyImageUploadView.as_view(), name='company-image-upload'),
+    path('d/<str:pk>/', views.EmployerDeleteView.as_view(), name='company-delete'),
+    path('edit/<str:pk>/', views.EmployerCompanyUpdateView.as_view(), name='company-update'),
 ]
 
 urlpatterns = [

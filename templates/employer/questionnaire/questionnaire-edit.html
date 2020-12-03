@@ -1,0 +1,172 @@
+{% extends '../employer-base.html' %}
+{% load static humanize widget_tweaks sass_tags %}
+{% block title %}
+{{ object.title }} - Questionnaire
+{% endblock title %}
+
+{% block page_css %}
+{% endblock page_css %}
+
+{% block content %}
+
+<div class="header bg-primary pb-6">
+    <div class="container-fluid">
+        <div class="header-body">
+            <div class="row align-items-center py-4">
+                <div class="col-lg-6 col-7">
+                    <h6 class="h2 text-white d-inline-block mb-0">Edit Questionnaire</h6>
+                    <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
+                        <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
+                        <li class="breadcrumb-item"><a href="{% url 'employer:dashboard' %}"><i class="fas fa-home"></i></a></li>
+                        <li class="breadcrumb-item"><a href="{% url 'employer:dashboard' %}">Dashboard</a></li>
+                        <li class="breadcrumb-item"><a href="{% url 'job:job-listing' %}">Job Listings</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Edit Questionnaire</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+            <div class="container mt-4">
+                <a href="{% url 'job:job-listing' %}" class="mb-0 text-white top-4"> <i class="fas fa-caret-left ml-2 mr-2"></i> Back</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="container mt-n2 d-flex justify-content-center">
+
+    <!-- Editing Form -->
+    <div class="card mt-n5 position-relative w-100" style="max-width: 1200px;">
+        <div class="card-body py-5 px-sm-4 px-3">
+            {% if object.questionnaire.question_set.all %}
+            {% else %}
+            <div class="d-flex justify-content-center align-items-center flex-column">
+                <div class="mt-4 d-flex align-items-center">
+                    <i class="far fa-clipboard fa-3x text-gray ml-4"></i>
+                </div>
+                <h4 class="px-md-5 px-0 text-center mt-4">Would you like to create a questionnaire for <span class="font-weight-bold text-primary">{{ object.title }} ({{ object.company.company_name }})</span>?</h4>
+                <p class="small font-weight-light px-md-5 px-0 text-center">A questionnaire can be a fun way of breaking the ice and getting to know your<br> candidates a little better before any kind of interview process begins.</p>
+
+                <div class="mt-4 mb-4">
+                    <a href="{% url 'job:job-listing' %}" class="px-5 small font-weight-light">No thanks</a>
+                    <button class="btn btn-primary btn-sm px-5" type="button" onclick="
+                        event.preventDefault()
+                        $(this).parent().parent().fadeOut(0)
+                        $(this).parent().parent().removeClass('d-flex')
+                        $('#id_form').fadeIn('fast')
+                    ">Sure!</button>
+                </div>
+            </div>
+            {% endif %}
+            <form method='post' class="px-4" enctype="multipart/form-data" id="id_form" style="display: none;">
+                {% csrf_token %}
+                {{ form.management_form }}
+
+                {% render_field form.formset_management.TOTAL_FORMS %}
+
+                <div class="row align-items-center">
+                    <div class="col-sm-6 col-8">
+                        <h2 class="m-0">Questionnaire<p class="text-gray mb-0">{{ object.title }}</p></h2>
+                    </div>
+                    <div class="d-flex justify-content-end col-sm-6 col-4">
+                    {% if object.company.avatar %}
+                        <img src="{{ object.company.avatar.url }}" alt="{{ object.company.company_title }} Logo" class="ml-4 avatar img-fluid rounded NO-CACHE">
+                    {% else %}
+                        <img src="{% static 'placeholders/office.svg' %}" alt="{{ object.company.company_title }} Logo" class="ml-4 avatar-sm img-fluid rounded NO-CACHE">
+                    {% endif %}
+                    </div>
+                </div>
+                    
+                <div class="border-bottom mt-4"></div>
+                
+                <div id="id_form_container" class="mt-4">
+                    <div class="mb-4">
+                        <h4 class="mt-4">Get to know your candidates, don’t be too serious!</h4>
+                        <p class="small font-weight-light">A successful and efficient business could be determined by how well a team works together,<br> so you should get to know your candidates personally to see whether they are suitable to fit in with your company’s culture.</p>
+        
+                        <h5 class="mt-4 font-weight-normal mb-1">Here are some example questions:</h5>
+                        <p class="small font-weight-light">“If you won 1 million dollars today, what would you do with it?”<br>“Which do you prefer more, reading books or outdoor activities? Tell us why.”</p>
+                    </div>
+
+                    {% for f in form %}
+                    <div class="row mt-2 align-items-center" id="id_questionnaire_formset_container">
+                        <div class="col-12 col-md-8 mt-2">
+                            <label for="{{ f.question.auto_id }}" id="id_label_{{ f.question.auto_id }}" class="small">Question</label>
+                            {{ f.id }}
+                            {% render_field f.DELETE class='d-none' %}
+                            {% render_field f.question class="form-control" placeholder="..." rows="1" %}
+                            <p class="small font-weight-light text-danger mb-0">{{ f.errors | striptags }}</p>
+                            <div class="w-100 d-flex justify-content-end">
+                                <a class="text-danger small opacity-8 delete-btn mt-1 text-right" data-no="{{ forloop.counter }}" href="" onclick="
+                                    event.preventDefault()
+                                    if ($(this).data('no') != '1') {
+                                        $('#{{ f.DELETE.auto_id }}').prop('checked', true)
+                                        $(this).parent().parent().parent().fadeOut(50)
+                                    } else {
+                                        alert('What are you trying to do man....')
+                                    }
+                                ">Delete</a>
+                            </div>
+                        </div>
+
+                        <div class="col-12 mt-4" id="id_question_border_{{ f.question.auto_id }}">
+                            <div class="border-bottom"></div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <div class="w-100 d-flex justify-content-start mt-4">
+                    <a class="small font-weight-light" href="" id="id_add_form_button">Add another question</a>
+                </div>
+
+
+                <div class="w-100 d-flex justify-content-end mt-5">
+                    <a href="{% url 'job:job-listing' %}" class="font-weight-light small pt-1 px-5">Cancel</a>
+                    <button class="btn btn-primary btn-sm px-5 btn-sm" type="submit" id="id_submit_button">Save</button>
+                </div>
+                
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
+
+{% block page_js %}
+<script>
+    $(document).ready(function() {
+        let questionnaire_form = $('#id_questionnaire_formset_container')
+        let add_form_button = $('#id_add_form_button')
+        let total_form_input = $('#id_form-TOTAL_FORMS')
+        let form_container = $('#id_form_container')
+        let formNum = total_form_input.val()
+
+        $('.delete-btn').first().fadeOut(0)
+
+        {% if object.questionnaire.question_set.all %}
+        $('#id_form').fadeIn('fast')
+        {% endif %}
+
+        add_form_button.on('click', function(e) {
+            e.preventDefault()
+
+            let newForm = questionnaire_form.clone()
+            let deleteBtn = newForm.find('.delete-btn')
+            newForm.find('#id_form-0-question').empty()
+            deleteBtn.attr('data-no', 0)
+            deleteBtn.fadeIn(0)
+            
+            newForm = newForm[0].cloneNode(true)
+            let formRegex = RegExp(`form-(\\d){1}-`, 'g')
+
+            formNum++
+            newForm.innerHTML = newForm.innerHTML.replace(formRegex, `form-${formNum}-`)
+            total_form_input.val(formNum+1)
+            
+            form_container.append(newForm)
+        })
+    })
+</script>
+{% endblock page_js %}

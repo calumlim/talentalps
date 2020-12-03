@@ -1,6 +1,8 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
+import uuid
+
 from talentalps.models import BaseModel
 
 # Create your models here.
@@ -14,6 +16,7 @@ class JobApplicationNotification(BaseModel):
         (TYPE_DECLINED, 'Unfortunately, your job application has been declined.')
     )
 
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     type = models.CharField(_("type"), max_length=100, choices=TYPE_CHOICES)
     message = models.CharField(_("message"), max_length=200)
     seen = models.BooleanField(_("seen"), default=False)

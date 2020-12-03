@@ -19,7 +19,19 @@ case "$1" in
   "start_dev" )
     # run migrations first if theres any && start the dev server
     python ./manage.py migrate --noinput
-    python ./manage.py runserver 0.0.0.0:8000
+    python ./manage.py runserver 0.0.0.0:8000 & celery -A talentalps beat & celery -A talentalps worker -B -l INFO
+  ;;
+  "init_celery_workers" )
+    # start celery workers
+    celery -A talentalps worker -B -l INFO
+  ;;
+  "init_celery_beat" )
+    # start celery workers
+    celery -A talentalps beat
+  ;;
+  "celery" )
+    # run django commands
+    celery -A talentalps "${@:2}"
   ;;
   "test" )
     # linting first

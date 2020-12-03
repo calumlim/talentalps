@@ -6,7 +6,6 @@ Create Company
 
 {% block page_css %}
 <link rel="stylesheet" href="{% static 'dashboard-assets/vendor/select2/dist/css/select2.min.css' %}">
-<link rel="stylesheet" href="{% sass_src 'cms-assets/scss/argon-design-system.scss' %}">
 <link rel="stylesheet" href="{% static 'dashboard-assets/css/croppr/croppr.min.css' %}">
 {% endblock page_css %}
 
@@ -28,20 +27,21 @@ Create Company
                     </nav>
                 </div>
             </div>
+            <div class="container mt-4">
+                <a href="{% url 'employer:company-list' %}" class="mb-0 text-white top-4"> <i class="fas fa-caret-left ml-2 mr-2"></i> Back</a>
+            </div>
         </div>
     </div>
 </div>
 
 
 
-<div class="container d-flex justify-content-center">
+<div class="container mt-n2 d-flex justify-content-center">
 
     <!-- Editing Form -->
     <div class="card mt-n5 position-relative w-100" style="max-width: 1200px;">
-        <a href="{% url 'employer:company-list' %}" class="mb-0 position-absolute ml-4 top-4"> <i class="fas fa-caret-left ml-2 mr-2"></i> Back</a>
-
         <div class="card-body py-5 px-sm-4 px-3">
-            <form method='post' class="mt-5 px-4" enctype="multipart/form-data">
+            <form method='post' class="px-4" enctype="multipart/form-data">
                 {% csrf_token %}
                 {% render_field form.logo_x %}
                 {% render_field form.logo_y %}
@@ -53,20 +53,23 @@ Create Company
                 {% render_field form.header_w %}
                 {% render_field form.header_h %}
 
-                <h4 class="text-muted mb-4 font-weight-normal small">COMPANY HEADER</h4>
+                <div class="d-flex align-items-center">
+                    <h2 class="m-0">Create Company Profile</h2>
+                </div>
+                <div class="border-bottom mt-4"></div>
+
+                <h4 class="text-muted mt-4 mb-4 font-weight-normal small">COMPANY HEADER</h4>
                 
                 <div class="row">
                     <div class="col-12 col-sm-6">
                         <label for="id_avatar" class="mb-0">Logo</label>
                         <p class="small font-weight-lighter">Please use your official company logo</p>
-
-                        <div class="custom-file">
-                            {% render_field form.avatar class="custom-file-input mb-0 small" %}
-                            <label class="custom-file-label" for="id_avatar">Logo</label>
-                        </div>
+                        <button type="button" class="btn btn-sm btn-outline-primary px-4" onclick="$('#id_avatar').click()">Upload Logo</button>
+                        {% render_field form.avatar class="custom-file-input mb-0 small d-none" %}
                         <p class="small text-danger font-weight-light mb-0 mt-1">{{ form.avatar.errors | striptags }}</p>
                         {% if form.errors %}
                             <p class="small text-danger font-weight-light mb-0 mt-1">Please reupload your company logo.</p>
+                            <p class="small text-gray font-weight-light mb-0 mt-1">Ignore this message if you don't have a logo.</p>
                         {% endif %}
                         <a href="#" class="small mt-n2 ml-1 font-weight-light" id="id_crop_logo_button" data-toggle="modal" data-target="#id_logo_crop_modal">Edit Logo <span class="text-danger">(Crop pending)</span></a>
 
@@ -75,13 +78,12 @@ Create Company
                     <div class="col-12 col-sm-6">
                         <label for="id_header_image" class="mb-0">Header</label>
                         <p class="small font-weight-lighter">Present an eye catching header</p>
-                        <div class="custom-file">
-                            {% render_field form.header_image class="custom-file-input mb-0 small" %}
-                            <label class="custom-file-label" for="id_header_image">Header</label>
-                        </div>
+                        <button type="button" class="btn btn-sm btn-outline-primary px-4" onclick="$('#id_header_image').click()">Upload Header</button>
+                        {% render_field form.header_image class="custom-file-input mb-0 small d-none" %}
                         <p class="small text-danger font-weight-light mb-0 mt-1">{{ form.header_image.errors | striptags }}</p>
                         {% if form.errors %}
                             <p class="small text-danger font-weight-light mb-0 mt-1">Please reupload your company header.</p>
+                            <p class="small text-gray font-weight-light mb-0 mt-1">Ignore this message if you don't have a header.</p>
                         {% endif %}
                         <a href="#" class="small mt-n2 ml-1 font-weight-light" id="id_crop_header_button" data-toggle="modal" data-target="#id_header_crop_modal">Edit Header <span class="text-danger">(Crop pending)</span></a>
                     </div>
@@ -132,71 +134,37 @@ Create Company
                             <p class="small text-danger font-weight-light mb-0 mt-1">{{ form.company_type.errors | striptags }}</p>
                         </div>
                     </div>
+                    <div class="col-12 col-sm-6">
+                        <div class="form-group">
+                            <label for="id_registration_no">Company Registration No. <span class="text-danger">*</span></label>
+                            {% render_field form.registration_no class="form-control" placeholder="eg. 201902123456" %}
+                            <p class="small text-danger font-weight-light mb-0 mt-1">{{ form.registration_no.errors | striptags }}</p>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="row">
                     <div class="col-12">
                         <div class="form-group">
-                            <label for="id_industry">Industry <span class="text-danger">*</span></label>
+                            <label for="id_industry" class="mb-0">Industry <span class="text-danger">*</span></label>
+                            <div class="d-flex align-items-center mb-2 mt-2">
+                                {% render_field form.other_industry_checkbox class="form-control-sm" %}
+                                <label for="id_other_industry_checkbox" class="small font-weight-light ml-2 mb-0">Other industry</label>
+                            </div>
+                            <p class="small text-danger font-weight-light mb-0 mt-1">{{ form.other_industry_checkbox.errors | striptags }}</p>
+                            {% render_field form.other_industry class="form-control" placeholder="Enter your industry" style="display: none;" %}
                             {% render_field form.industry class="form-control" multiple="" data-trigger="" %}
+                            
                             <p class="small text-danger font-weight-light mb-0 mt-1">{{ form.industry.errors | striptags }}</p>
+                            <p class="small text-danger font-weight-light mb-0 mt-1">{{ form.other_industry.errors | striptags }}</p>
+
                         </div>
                     </div>
                 </div>
-
-                <div class="row">
-                    <div class="col-12">
-                        <div class="form-group">
-                            <label for="id_description">Description <span class="text-danger">*</span></label>
-                            {% render_field form.description class="form-control" placeholder="Provide a summary for your company" rows="5" %}
-                            <p class="small text-danger font-weight-light mb-0 mt-1">{{ form.description.errors | striptags }}</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="border-bottom mt-5"></div>
-
-                <h4 class="text-muted mb-4 font-weight-normal small mt-4">LOCATION</h4>
-
-                <div class="row">
-                    <div class="col-12 col-sm-6">
-                        <div class="form-group">
-                            <label for="id_address">Address</label>
-                            {% render_field form.address class="form-control" placeholder="" %}
-                            <p class="small text-danger font-weight-light mb-0 mt-1">{{ form.address.errors | striptags }}</p>
-                        </div>
-                    </div>
-
-                    <div class="col-12 col-sm-6">
-                        <div class="form-group">
-                            <label for="id_postcode">Postcode</label>
-                            {% render_field form.postcode class="form-control" placeholder="" %}
-                            <p class="small text-danger font-weight-light mb-0 mt-1">{{ form.postcode.errors | striptags }}</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-12 col-sm-6">
-                        <div class="form-group">
-                            <label for="id_state">State</label>
-                            {% render_field form.state class="form-control" data-toggle="select" title="State Select" data-placeholder="State" %}
-                            <p class="small text-danger font-weight-light mb-0 mt-1">{{ form.state.errors | striptags }}</p>
-                        </div>
-                    </div>
-                    <div class="col-12 col-sm-6">
-                        <div class="form-group">
-                            <label for="id_country">Country</label>
-                            {% render_field form.country class="form-control" data-toggle="select" title="Country Select" data-placeholder="Country" %}
-                            <p class="small text-danger font-weight-light mb-0 mt-1">{{ form.country.errors | striptags }}</p>
-                        </div>
-                    </div>
-                </div>
-
 
                 <div class="w-100 d-flex justify-content-end mt-5">
-                    <a href="{% url 'employer:company-list' %}" class="btn btn-outline-secondary px-5">Cancel</a>
-                    <button class="btn btn-success px-5" type="submit">Next</button>
+                    <a href="{% url 'employer:company-list' %}" class="font-weight-light small pt-1 px-5">Cancel</a>
+                    <button class="btn btn-success btn-sm px-5" type="submit" id="id_submit_button">Next</button>
                 </div>
                 
             </form>
@@ -210,8 +178,6 @@ Create Company
         <div class="modal-content">
         <div class="modal-header">
             <h5 class="modal-title" id="exampleModalLabel">Edit Company Logo</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
             </button>
         </div>
         <div class="modal-body">
@@ -234,8 +200,6 @@ Create Company
         <div class="modal-content">
         <div class="modal-header">
             <h5 class="modal-title" id="exampleModalLabel">Edit Company Header</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
             </button>
         </div>
         <div class="modal-body">
@@ -262,7 +226,7 @@ Create Company
 <script>
     $(document).ready(function() {
         const logo_ratio = 1
-        const header_ratio = 0.25
+        const header_ratio = 0.17
         let logo_message = $('#id_crop_logo_message')
         let header_message = $('#id_crop_header_message')
         let logo_set_button = $('#id_set_logo_button')
@@ -293,6 +257,19 @@ Create Company
                 setTimeout(function() {
                     $('#id_crop_logo_button').click()
                 }, 400);
+            } else {
+                $('#id_crop_logo_button').fadeOut(0)
+                $('#id_crop_logo_button span').text('(Crop pending)')
+                $.notify({
+                icon: 'fas fa-bell',
+                message: '<span class="ml-2">Company logo removed, please try re-uploading</span>' 
+                },{
+                    type: 'danger',
+                    placement: {
+                        from: "bottom",
+                        align: "right"
+                    },
+                });
             }
         })
 
@@ -309,6 +286,19 @@ Create Company
                 setTimeout(function() {
                     $('#id_crop_header_button').click()
                 }, 400);
+            } else {
+                $('#id_crop_header_button').fadeOut(0)
+                $('#id_crop_header_button span').text('(Crop pending)')
+                $.notify({
+                icon: 'fas fa-bell',
+                message: '<span class="ml-2">Company header removed, please try re-uploading</span>' 
+                },{
+                    type: 'danger',
+                    placement: {
+                        from: "bottom",
+                        align: "right"
+                    },
+                });
             }
         })
 
@@ -430,6 +420,7 @@ Create Company
 </script>
 <script>
     $(document).ready(function(){ 
+        let other_industry_checkbox = $('#id_other_industry_checkbox')
 
         // Activate Choices.js
         const industry_choices = new Choices('#id_industry', {
@@ -445,6 +436,41 @@ Create Company
             noResultsText: 'Nothing to see here...',
             noChoicesText: 'No more industries to choose from',
         });
+
+        $('#id_submit_button').on('click', function() {
+            industry_count = $('#id_industry').val().length
+            if (industry_count <= 0) {
+                $.notify({
+                    icon: 'fas fa-exclamation-triangle',
+                    message: '<span class="ml-2">Please key in at least 1 industry</span>' 
+                },{
+                    type: 'warning',
+                    placement: {
+                        from: "bottom",
+                        align: "right"
+                    },
+                });
+            }
+        })
+
+        if (other_industry_checkbox.prop('checked') == true) {
+            $('#id_industry').parent().parent().fadeOut(0)
+            $('#id_other_industry').fadeIn('fast')
+        }
+
+        other_industry_checkbox.on('change', function() {
+            let state = other_industry_checkbox.prop('checked')
+            if (state == true) {
+                $('#id_industry').parent().parent().fadeOut(0)
+                $('#id_other_industry').fadeIn('fast')
+                $('#id_other_industry').focus()
+                industry_choices.setChoiceByValue('Other')
+            } else {
+                $('#id_industry').parent().parent().fadeIn(0)
+                $('#id_other_industry').fadeOut(0)
+                industry_choices.removeActiveItemsByValue('Other');
+            }
+        })
     });
 </script>
 

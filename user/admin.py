@@ -4,3 +4,4 @@ from . import models
 admin.site.register(models.UserProfile)
 admin.site.register(models.Candidate)
 admin.site.register(models.Company)
+admin.site.register(models.CompanyImage)

@@ -40,7 +40,7 @@ class ResetPasswordForm(forms.Form):
 
         return confirm_password
 
-class CompanyCreateForm(forms.ModelForm):
+class CompanyDetailsCreateForm(forms.ModelForm):
     logo_x = forms.FloatField(required=False, widget=(forms.HiddenInput()))
     logo_y = forms.FloatField(required=False, widget=(forms.HiddenInput()))
     logo_w = forms.FloatField(required=False, widget=(forms.HiddenInput()))
@@ -49,19 +49,95 @@ class CompanyCreateForm(forms.ModelForm):
     header_y = forms.FloatField(required=False, widget=(forms.HiddenInput()))
     header_w = forms.FloatField(required=False, widget=(forms.HiddenInput()))
     header_h = forms.FloatField(required=False, widget=(forms.HiddenInput()))
+    other_industry_checkbox = forms.BooleanField(required=False)
 
     class Meta:
         model = user_models.Company
-        fields = ['avatar', 'header_image', 'company_name', 'description', 'website',
-        'company_size', 'company_type', 'founded', 'industry', 'other_industry', 'address',
-        'postcode', 'state', 'country']
+        fields = ['avatar', 'header_image', 'company_name', 'website',
+        'company_size', 'company_type', 'founded', 'industry', 'other_industry', 'registration_no']
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['other_industry'].required = False
         self.fields['website'].required = False
         self.fields['industry'] = forms.MultipleChoiceField(choices=constants.INDUSTRY)
-        self.fields['country'].initial = 'MY'
     
     def clean_industry(self):
-        return ', '.join(self.cleaned_data.get('industry'))
+        industry = self.cleaned_data.get('industry')
+        other_industry_checkbox = self.data.get('other_industry_checkbox')
+        other_industry = self.data.get('other_industry')
+        if other_industry_checkbox:
+            if other_industry == '':
+                self.add_error('industry', forms.ValidationError("This field is required."))
+            return 'Other'
+        return '|'.join(industry)
+
+class CompanyCreateDescriptionLocationForm(forms.ModelForm):
+    class Meta:
+        model = user_models.Company
+        fields = ['description', 'address', 'postcode', 'state', 'country']
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['country'].initial = 'MY'
+        self.fields['country'].required = True
+    
+    def clean(self):
+        cleaned_data = super().clean()
+        country = cleaned_data.get('country')
+        if country != 'MY':
+            cleaned_data['state'] = None
+        return cleaned_data
+
+class EmployerCompanyUpdateForm(forms.ModelForm):
+    logo_x = forms.FloatField(required=False, widget=(forms.HiddenInput()))
+    logo_y = forms.FloatField(required=False, widget=(forms.HiddenInput()))
+    logo_w = forms.FloatField(required=False, widget=(forms.HiddenInput()))
+    logo_h = forms.FloatField(required=False, widget=(forms.HiddenInput()))
+    header_x = forms.FloatField(required=False, widget=(forms.HiddenInput()))
+    header_y = forms.FloatField(required=False, widget=(forms.HiddenInput()))
+    header_w = forms.FloatField(required=False, widget=(forms.HiddenInput()))
+    header_h = forms.FloatField(required=False, widget=(forms.HiddenInput()))
+    other_industry_checkbox = forms.BooleanField(required=False)
+
+    class Meta:
+        model = user_models.Company
+        fields = ['avatar', 'header_image', 'company_name', 'website',
+        'company_size', 'company_type', 'founded', 'industry', 'other_industry', 'registration_no',
+        'description', 'address', 'postcode', 'state', 'country']
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['other_industry'].required = False
+        self.fields['website'].required = False
+        self.fields['country'].required = True
+        self.fields['industry'] = forms.MultipleChoiceField(choices=constants.INDUSTRY)
+        self.fields['company_name'].disabled = True
+        self.fields['company_name'].required = False
+        self.fields['registration_no'].disabled = True
+        self.fields['registration_no'].required = False
+        if self.instance.other_industry:
+            self.fields['other_industry_checkbox'].initial = True
+    
+    def clean(self):
+        cleaned_data = super().clean()
+        country = cleaned_data.get('country')
+        if country != 'MY':
+            cleaned_data['state'] = None
+        return cleaned_data
+    
+    def clean_industry(self):
+        self.cleaned_data = super().clean()
+        industry = self.cleaned_data.get('industry')
+        other_industry_checkbox = self.data.get('other_industry_checkbox')
+        other_industry = self.data.get('other_industry')
+        if other_industry_checkbox:
+            if other_industry == '':
+                self.add_error('industry', forms.ValidationError("This field is required."))
+            return 'Other'
+        return '|'.join(industry)
+
+class CompanyImageUploadForm(forms.ModelForm):
+    class Meta:
+        model = user_models.CompanyImage
+        fields = ['image']

@@ -31,7 +31,7 @@ Dashboard
                     <div class="row">
                       <div class="col">
                         <h5 class="card-title text-uppercase text-muted mb-0">Total traffic</h5>
-                        <span class="h2 font-weight-bold mb-0">350,897</span>
+                        <span class="h2 font-weight-bold mb-0">{{ total_traffic.total | intcomma }}</span>
                       </div>
                       <div class="col-auto">
                         <div class="icon icon-shape bg-gradient-red text-white rounded-circle shadow">
@@ -67,7 +67,7 @@ Dashboard
                     <div class="row">
                       <div class="col">
                         <h5 class="card-title text-uppercase text-muted mb-0">Job applications</h5>
-                        <span class="h2 font-weight-bold mb-0">924</span>
+                        <span class="h2 font-weight-bold mb-0">{{ job_applications_count | intcomma }}</span>
                       </div>
                       <div class="col-auto">
                         <div class="icon icon-shape bg-gradient-success text-white rounded-circle shadow">
@@ -110,7 +110,7 @@ Dashboard
               <div class="card-header border-0">
                 <div class="row align-items-center">
                   <div class="col">
-                    <h3 class="mb-0 align-items-center d-flex"><i class="ni ni-single-copy-04 pr-3 text-primary"></i> Recent Job Applications</h3>
+                    <h3 class="mb-0 align-items-center d-flex"><i class="ni ni-single-copy-04 pr-3 text-primary"></i> Pending Job Applications</h3>
                   </div>
                   <div class="col text-right">
                     <a href="{% url 'employer:job-application-pending' %}" class="small">See all</a>
@@ -121,6 +121,7 @@ Dashboard
                 <table class="table align-items-center table-flush">
                   <thead class="thead-light">
                     <tr>
+                      <th scope="col">Company</th>
                       <th scope="col">Position</th>
                       <th scope="col">Date</th>
                       <th scope="col">Status</th>
@@ -130,16 +131,19 @@ Dashboard
                     </tr>
                   </thead>
                   <tbody class="list">
-                    <tr>
-                      <th scope="row">Python Web Developer</th>
-                      <td>12 Nov 2020</td>
+                  {% if pending_job_applications %}
+                  <tr>
+                    {% for application in pending_job_applications %}
+                      <th scope="row">{{ application.joblisting.company.company_name }}</th>
+                      <th scope="row">{{ application.joblisting.title }}</th>
+                      <td>{{ application.created_at | date:'d M Y' }}</td>
                       <td>
                         <span class="badge badge-dot mr-4">
                           <i class="bg-gray mb-1"></i>
-                          <span class="status">Pending</span>
+                          <span class="status">{{ application.get_status_display }}</span>
                         </span>
                       </td>
-                      <td>Calum Lim Sheng En</td>
+                      <td>{{ application.candidate.userprofile.name }}</td>
                       <td>
                         <span class="badge badge-pill badge-success">QUALIFIED BY 1 YEAR</span>
                         <span class="badge badge-pill badge-secondary text-gray">QUESTIONNAIRE</span>
@@ -155,6 +159,15 @@ Dashboard
                         </div>
                       </td>
                     </tr>
+                    {% endfor %}
+                  {% else %}
+                    <tr>
+                      <td>
+                        <i class="text-gray">No job applications yet*</i>
+                      </td>
+                    </tr>
+                  {% endif %}
+                    
                   </tbody>
                 </table>
               </div>

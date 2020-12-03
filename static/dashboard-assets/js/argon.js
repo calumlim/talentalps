@@ -1677,6 +1677,7 @@ var Dropzones = (function() {
 
 	function init($this) {
 		var multiple = ($this.data('dropzone-multiple') !== undefined) ? true : false;
+		var image_upload = ($this.data('dropzone-upload-image') !== undefined) ? true : false;
 		var preview = $this.find($dropzonePreview);
 		var currentFile = undefined;
 
@@ -1687,8 +1688,12 @@ var Dropzones = (function() {
 			thumbnailHeight: null,
 			previewsContainer: preview.get(0),
 			previewTemplate: preview.html(),
-			maxFiles: (!multiple) ? 1 : null,
-			acceptedFiles: (!multiple) ? 'image/*' : null,
+			maxFiles: (!multiple) ? 1 : 25,
+			acceptedFiles: (image_upload) ? 'image/*' : null,
+			resizeWidth: 1280,
+			resizeHeight: 720,
+			resizeQuality: 0.9,
+			paramName: "image",
 			init: function() {
 				this.on("addedfile", function(file) {
 					if (!multiple && currentFile) {

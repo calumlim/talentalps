@@ -27,7 +27,10 @@
     <div class="card support-card">
         <div class="card-body p-5">
             <a href="{% url 'cms:home' %}">
-                <img src="{% static 'cms-assets/img/brand/logo_for_bright_bg.png' %}" alt="TalentAlps Support" class="img-fluid mt-4" style="height: 40px;">
+                <div class="d-flex align-items-center mt-4">
+                <img src="{% static 'cms-assets/img/brand/icon.svg' %}" class="navbar-brand-img ml-0 mr-3 mb-2" alt="TalentAlps" style="height: 35px; ">
+                <img src="{% static 'cms-assets/img/brand/logo_for_bright_bg.png' %}" alt="TalentAlps Support" class="img-fluid" style="height: 40px;">
+            </div>
             </a>
             <h6 class="m-0 mt-5">Support</h6>
             <p>Got an issue? We're here to help!</p>

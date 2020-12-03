@@ -7,7 +7,10 @@
       <!-- Brand -->
       <div class="sidenav-header  d-flex  align-items-center">
         <a class="navbar-brand py-1" href="{% url 'employer:dashboard' %}">
-          <img src="{% static 'cms-assets/img/brand/logo_with_icon.png' %}" class="navbar-brand-img ml-0" alt="TalentAlps" style="height: 22px; ">
+          <div class="d-flex align-items-center">
+            <img src="{% static 'cms-assets/img/brand/icon.svg' %}" class="navbar-brand-img ml-0 mr-3 mb-1" alt="TalentAlps" style="height: 18px; ">
+            {% include "partials/logo.html" %}
+          </div>
         </a>
         <div class=" ml-auto ">
           <!-- Sidenav toggler -->

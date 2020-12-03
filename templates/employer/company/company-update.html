@@ -1,0 +1,554 @@
+{% extends '../employer-base.html' %}
+{% load static humanize widget_tweaks sass_tags %}
+{% block title %}
+Edit Company - {{ object.company_name }}
+{% endblock title %}
+
+{% block page_css %}
+<link rel="stylesheet" href="{% static 'dashboard-assets/vendor/select2/dist/css/select2.min.css' %}">
+<link rel="stylesheet" href="{% static 'dashboard-assets/css/croppr/croppr.min.css' %}">
+{% endblock page_css %}
+
+{% block content %}
+
+<div class="header bg-primary pb-6">
+    <div class="container-fluid">
+        <div class="header-body">
+            <div class="row align-items-center py-4">
+                <div class="col-lg-6 col-7">
+                    <h6 class="h2 text-white d-inline-block mb-0">Edit Company</h6>
+                    <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
+                        <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
+                        <li class="breadcrumb-item"><a href="{% url 'employer:dashboard' %}"><i class="fas fa-home"></i></a></li>
+                        <li class="breadcrumb-item"><a href="{% url 'employer:dashboard' %}">Dashboard</a></li>
+                        <li class="breadcrumb-item"><a href="{% url 'employer:company-list' %}">Companies</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Edit Company</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+            <div class="container mt-4">
+                <a href="{% url 'employer:company-list' %}" class="mb-0 text-white top-4"> <i class="fas fa-caret-left ml-2 mr-2"></i> Back</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="container mt-n2 d-flex justify-content-center">
+
+    <!-- Editing Form -->
+    <div class="card mt-n5 position-relative w-100" style="max-width: 1200px;">
+        <div class="card-body py-5 px-sm-4 px-3">
+            <form method='post' class="px-4" enctype="multipart/form-data">
+                {% csrf_token %}
+                {% render_field form.logo_x %}
+                {% render_field form.logo_y %}
+                {% render_field form.logo_w %}
+                {% render_field form.logo_h %}
+
+                {% render_field form.header_x %}
+                {% render_field form.header_y %}
+                {% render_field form.header_w %}
+                {% render_field form.header_h %}
+                    <div class="row align-items-center">
+                        <div class="col-8">
+                            <h2 class="m-0">Edit Company<p class="text-gray font-weight-light mb-0">{{ view.object.company_name }}</p></h2>
+                        </div>
+                        <div class="col-4 d-flex justify-content-end">
+                        {% if object.avatar %}
+                            <img src="{{ object.avatar.url }}" alt="{{ object.company_name }}" class="avatar rounded ml-4 NO-CACHE">
+                        {% else %}
+                            <img src="{% static 'placeholders/office.svg' %}" alt="{{ object.company_name }}" class="avatar rounded ml-4">
+                        {% endif %}
+                        </div>
+                    </div>
+                    
+                <div class="border-bottom mt-4"></div>
+
+                <h4 class="text-muted mb-4 mt-4 font-weight-normal small">COMPANY HEADER</h4>
+                
+                <div class="row">
+                    <div class="col-12 col-sm-6">
+                        <label for="id_avatar" class="mb-0">Logo</label>
+                        <p class="small font-weight-lighter">Please use your official company logo</p>
+                        <button type="button" class="btn btn-sm btn-outline-primary px-4" onclick="$('#id_avatar').click()">Upload Logo</button>
+                        <input type="file" name="avatar" accept="image/*" class="custom-file-input mb-0 small d-none" id="id_avatar">
+                        <p class="small text-danger font-weight-light mb-0 mt-1">{{ form.avatar.errors | striptags }}</p>
+                        {% if form.errors %}
+                            <p class="small text-danger font-weight-light mb-0 mt-1">Please reupload your company logo.</p>
+                        {% endif %}
+                        <a href="#" class="small mt-n2 ml-1 font-weight-light" id="id_crop_logo_button" data-toggle="modal" data-target="#id_logo_crop_modal">Edit Logo <span class="text-danger">(Crop pending)</span></a>
+
+                    </div>
+
+                    <div class="col-12 col-sm-6">
+                        <label for="id_header_image" class="mb-0">Header</label>
+                        <p class="small font-weight-lighter">Present an eye catching header</p>
+                        <button type="button" class="btn btn-sm btn-outline-primary px-4" onclick="$('#id_header_image').click()">Upload Header</button>
+                        <input type="file" name="header_image" accept="image/*" class="custom-file-input mb-0 small d-none" id="id_header_image">
+                        <p class="small text-danger font-weight-light mb-0 mt-1">{{ form.header_image.errors | striptags }}</p>
+                        {% if form.errors %}
+                            <p class="small text-danger font-weight-light mb-0 mt-1">Please reupload your company header.</p>
+                        {% endif %}
+                        <a href="#" class="small mt-n2 ml-1 font-weight-light" id="id_crop_header_button" data-toggle="modal" data-target="#id_header_crop_modal">Edit Header <span class="text-danger">(Crop pending)</span></a>
+                    </div>
+                </div>
+
+                <div class="border-bottom mt-5"></div>
+
+                <h4 class="text-muted mb-4 font-weight-normal small mt-4">COMPANY INFORMATION</h4>
+                <div class="row">
+                    <div class="col-12 col-sm-6">
+                        <label for="id_company_name">Company Name <span class="text-danger">*</span></label>
+                        <div class="form-group">
+                            {% render_field form.company_name class="form-control mb-0" placeholder="eg. TalentAlps SDN BHD" %}
+                            <p class="small text-danger font-weight-light mb-0 mt-1">{{ form.company_name.errors | striptags }}</p>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6">
+                        <label for="id_website">Website <span class="text-danger"></span></label>
+                        <div class="form-group">
+                            {% render_field form.website class="form-control mb-0" placeholder="eg. https://talentalps.com" %}
+                            <p class="small text-danger font-weight-light mb-0 mt-1">{{ form.website.errors | striptags }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-12 col-sm-6">
+                        <label for="id_company_size">Company Size <span class="text-danger">*</span></label>
+                        <div class="form-group">
+                            {% render_field form.company_size class="form-control" data-toggle="select" title="Company Size Select" data-placeholder="Size" %}
+                            <p class="small text-danger font-weight-light mb-0 mt-1">{{ form.company_size.errors | striptags }}</p>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6">
+                        <label for="id_founded">Founded Year <span class="text-danger">*</span></label>
+                        <div class="form-group">
+                            {% render_field form.founded class="form-control" placeholder="eg. 1995" %}
+                            <p class="small text-danger font-weight-light mb-0 mt-1">{{ form.founded.errors | striptags }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-12 col-sm-6">
+                        <div class="form-group">
+                            <label for="id_company_type">Company Type <span class="text-danger">*</span></label>
+                            {% render_field form.company_type class="form-control" data-toggle="select" title="Company Type Select" data-placeholder="Type" %}
+                            <p class="small text-danger font-weight-light mb-0 mt-1">{{ form.company_type.errors | striptags }}</p>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6">
+                        <div class="form-group">
+                            <label for="id_registration_no">Company Registration No. <span class="text-danger">*</span></label>
+                            {% render_field form.registration_no class="form-control" placeholder="eg. 201902123456" %}
+                            <p class="small text-danger font-weight-light mb-0 mt-1">{{ form.registration_no.errors | striptags }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label for="id_industry" class="mb-0">Industry <span class="text-danger">*</span></label>
+                            <div class="d-flex align-items-center mb-2 mt-2">
+                                {% render_field form.other_industry_checkbox class="form-control-sm" %}
+                                <label for="id_other_industry_checkbox" class="small font-weight-light ml-2 mb-0">Other industry</label>
+                            </div>
+                            <p class="small text-danger font-weight-light mb-0 mt-1">{{ form.other_industry_checkbox.errors | striptags }}</p>
+                            {% render_field form.other_industry class="form-control" placeholder="Enter your industry" style="display: none;" %}
+                            {% render_field form.industry class="form-control" multiple="" data-trigger="" %}
+                            <p class="small text-danger font-weight-light mb-0 mt-1">{{ form.industry.errors | striptags }}</p>
+                            <p class="small text-danger font-weight-light mb-0 mt-1">{{ form.other_industry.errors | striptags }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="border-bottom mt-4"></div>
+
+                <div class="row mt-4">
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label for="id_description">Description <span class="text-danger">*</span></label>
+                            {% render_field form.description class="form-control" placeholder="Provide a summary for your company" %}
+                            <p class="small text-danger font-weight-light mb-0 mt-1">{{ form.description.errors | striptags }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="border-bottom mt-5"></div>
+
+                <h4 class="text-muted mb-4 font-weight-normal small mt-4">LOCATION</h4>
+
+                <div class="row">
+                    <div class="col-12 col-sm-6">
+                        <div class="form-group">
+                            <label for="id_address">Address</label>
+                            {% render_field form.address class="form-control" placeholder="" %}
+                            <p class="small text-danger font-weight-light mb-0 mt-1">{{ form.address.errors | striptags }}</p>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-sm-6">
+                        <div class="form-group">
+                            <label for="id_postcode">Postcode</label>
+                            {% render_field form.postcode class="form-control" placeholder="" %}
+                            <p class="small text-danger font-weight-light mb-0 mt-1">{{ form.postcode.errors | striptags }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-12 col-sm-6">
+                        <div class="form-group">
+                            <label for="id_state">State</label>
+                            {% render_field form.state class="form-control" data-toggle="select" title="State Select" data-placeholder="State" %}
+                            <p class="small text-danger font-weight-light mb-0 mt-1">{{ form.state.errors | striptags }}</p>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6">
+                        <div class="form-group">
+                            <label for="id_country">Country <span class="text-danger">*</span></label>
+                            {% render_field form.country class="form-control" data-toggle="select" title="Country Select" data-placeholder="Country" %}
+                            <p class="small text-danger font-weight-light mb-0 mt-1">{{ form.country.errors | striptags }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="w-100 d-flex justify-content-end mt-5">
+                    <a href="{% url 'employer:company-list' %}" class="font-weight-light small pt-1 px-5">Cancel</a>
+                    <button class="btn btn-primary btn-sm px-5" type="submit" id="id_submit_button">Save</button>
+                </div>
+                
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Logo Cropping Modal -->
+<div class="modal fade" id="id_logo_crop_modal" tabindex="-1" role="dialog" aria-labelledby="logoCropModal" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Edit Company Logo</h5>
+            </button>
+        </div>
+        <div class="modal-body">
+            <p class="small">Align your company logo within the highlighted section.</p>
+            <div id="id_logo_crop_container" class="d-flex justify-content-center">
+            </div>
+            <div class="alert alert-danger text-center mt-2 py-2" role="alert" id="id_crop_logo_message"></div>
+        </div>
+        <div class="modal-footer d-flex justify-content-center">
+            <button type="button" class="btn btn-sm px-5 btn-secondary" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-sm px-5 btn-success" data-dismiss="modal" id="id_set_logo_button">Set</button>
+        </div>
+        </div>
+    </div>
+</div>
+
+<!-- Header Cropping Modal -->
+<div class="modal fade" id="id_header_crop_modal" tabindex="-1" role="dialog" aria-labelledby="headerCropModal" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Edit Company Header</h5>
+            </button>
+        </div>
+        <div class="modal-body">
+            <p class="small">Align your company header within the highlighted section.</p>
+            <div id="id_header_crop_container" class="d-flex justify-content-center">
+            </div>
+            <div class="alert alert-danger text-center mt-2 py-2" role="alert" id="id_crop_header_message"></div>
+        </div>
+        <div class="modal-footer d-flex justify-content-center">
+            <button type="button" class="btn btn-sm px-5 btn-secondary" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-sm px-5 btn-success" data-dismiss="modal" id="id_set_header_button">Set</button>
+        </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
+
+{% block page_js %}
+<script src="{% static 'dashboard-assets/vendor/select2/dist/js/select2.min.js' %}"></script>
+<script src="{% static 'cms-assets/js/plugins/choices.min.js' %}"></script>
+<script src="{% static 'dashboard-assets/js/components/croppr.min.js' %}"></script>
+
+<script>
+    $(document).ready(function() {
+        const logo_ratio = 1
+        const header_ratio = 0.17
+        let logo_message = $('#id_crop_logo_message')
+        let header_message = $('#id_crop_header_message')
+        let logo_set_button = $('#id_set_logo_button')
+        let header_set_button = $('#id_set_header_button')
+        let logo_data = {x: 0, y: 0, width: 0, height: 0}
+        let header_data = {x: 0, y: 0, width: 0, height: 0}
+
+        logo_message.fadeOut(0)
+        header_message.fadeOut(0)
+        logo_set_button.fadeOut(0)
+        header_set_button.fadeOut(0)
+        
+        {% if object.avatar %}
+            $('#id_crop_logo_button span').text("")
+            $('#id_logo_crop_container .croppr-container').remove()
+            $('#id_logo_crop_container').append($('<img src="" alt="" class="" id="id_logo_crop">'))
+            $('#id_logo_crop').attr('src', '{{ form.avatar.value.url }}');
+        {% else %}
+            $('#id_crop_logo_button').fadeOut(0)
+        {% endif %}
+
+        {% if object.header_image %}
+            $('#id_crop_header_button span').text("")
+            $('#id_header_crop_container .croppr-container').remove()
+            $('#id_header_crop_container').append($('<img src="" alt="" class="" id="id_header_crop">'))
+            $('#id_header_crop').attr('src', '{{ object.header_image.url }}');
+        {% else %}
+            $('#id_crop_header_button').fadeOut(0)
+        {% endif %}
+
+        $('#id_avatar').on('change', function(){
+            if (this.files && this.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    $('#id_logo_crop_container .croppr-container').remove()
+                    $('#id_logo_crop_container').append($('<img src="" alt="" class="" id="id_logo_crop">'))
+                    $('#id_logo_crop').attr('src', e.target.result);
+                }
+                reader.readAsDataURL(this.files[0]); // convert to base64 string
+                $('#id_crop_logo_button').fadeIn('fast')
+                $('#id_crop_logo_button span').text("(Crop pending)")
+                setTimeout(function() {
+                    $('#id_crop_logo_button').click()
+                }, 400);
+            } else {
+                $('#id_crop_logo_button').fadeOut(0)
+                $('#id_crop_logo_button span').text('(Crop pending)')
+                $.notify({
+                icon: 'fas fa-bell',
+                message: '<span class="ml-2">Company logo removed, please try re-uploading</span>' 
+                },{
+                    type: 'danger',
+                    placement: {
+                        from: "bottom",
+                        align: "right"
+                    },
+                });
+            }
+        })
+
+        $('#id_header_image').on('change', function(){
+            if (this.files && this.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    $('#id_header_crop_container .croppr-container').remove()
+                    $('#id_header_crop_container').append($('<img src="" alt="" class="" id="id_header_crop">'))
+                    $('#id_header_crop').attr('src', e.target.result);
+                }
+                reader.readAsDataURL(this.files[0]); // convert to base64 string
+                $('#id_crop_header_button').fadeIn('fast')
+                $('#id_crop_header_button span').text("(Crop pending)")
+                setTimeout(function() {
+                    $('#id_crop_header_button').click()
+                }, 400);
+            } else {
+                $('#id_crop_header_button').fadeOut(0)
+                $('#id_crop_header_button span').text('(Crop pending)')
+                $.notify({
+                icon: 'fas fa-bell',
+                message: '<span class="ml-2">Company header removed, please try re-uploading</span>' 
+                },{
+                    type: 'danger',
+                    placement: {
+                        from: "bottom",
+                        align: "right"
+                    },
+                });
+            }
+        })
+
+        $('#id_crop_logo_button').on('click', function() {
+            setTimeout(function() {
+                var logo_croppr = new Croppr('#id_logo_crop', {
+                    aspectRatio: logo_ratio,
+                    startSize: [90, 90],
+                    minSize: [100, 100, 'px'],
+                    onCropEnd: function(value) {
+                        logo_data.x = value.x
+                        logo_data.y = value.y
+                        logo_data.width = value.width
+                        logo_data.height = value.height
+                        logo_message.fadeIn('fast')
+
+                        if (value.x < 0 || value.y < 0) {
+                            logo_message.text("That doesn't look right...")
+                            logo_message.addClass('alert-danger')
+                            logo_message.removeClass('alert-success')
+                            logo_set_button.fadeOut(0)
+                        } else if (value.width >= 100) {
+                            logo_message.text('Looks good!')
+                            logo_message.removeClass('alert-danger')
+                            logo_message.addClass('alert-success')
+                            logo_set_button.fadeIn('fast')
+                        } else if (value.width < 100 && value.width > 50) {
+                            logo_message.text('Almost there! Just a little bigger!')
+                            logo_message.addClass('alert-danger')
+                            logo_message.removeClass('alert-success')
+                            logo_set_button.fadeOut(0)
+                        } else {
+                            logo_message.text('Try making it a little bigger')
+                            logo_message.addClass('alert-danger')
+                            logo_message.removeClass('alert-success')
+                            logo_set_button.fadeOut(0)
+                        }
+                    }
+                });
+            }, 200)
+        })
+        
+        $('#id_crop_header_button').on('click', function() {
+            setTimeout(function() {
+                var header_croppr = new Croppr('#id_header_crop', {
+                    aspectRatio: header_ratio,
+                    startSize: [98, 98],
+                    minSize: [100, 100, 'px'],
+                    onCropEnd: function(value) {
+                        header_data.x = value.x
+                        header_data.y = value.y
+                        header_data.width = value.width
+                        header_data.height = value.height
+                        header_message.fadeIn('fast')
+                        if (value.x < 0 || value.y < 0) {
+                            header_message.text("That doesn't look right...")
+                            header_message.addClass('alert-danger')
+                            header_message.removeClass('alert-success')
+                            header_set_button.fadeOut(0)
+                        } else if (value.height >= 100) {
+                            header_message.text('Looks good!')
+                            header_message.removeClass('alert-danger')
+                            header_message.addClass('alert-success')
+                            header_set_button.fadeIn('fast')
+                        } else if (value.height < 100 && value.width > 50) {
+                            header_message.text('Almost there! Just a little bigger!')
+                            header_message.addClass('alert-danger')
+                            header_message.removeClass('alert-success')
+                            header_set_button.fadeOut(0)
+                        } else {
+                            header_message.text('Try making it a little bigger')
+                            header_message.addClass('alert-danger')
+                            header_message.removeClass('alert-success')
+                            header_set_button.fadeOut(0)
+                        }
+                    }
+                });
+            }, 200)
+        });
+
+        logo_set_button.on('click', function() {
+            $('#id_logo_x').val(logo_data.x)
+            $('#id_logo_y').val(logo_data.y)
+            $('#id_logo_w').val(logo_data.width)
+            $('#id_logo_h').val(logo_data.height)
+            $.notify({
+                icon: 'fas fa-bell',
+                message: '<span class="ml-2">Company logo cropped!</span>' 
+            },{
+                type: 'primary',
+                placement: {
+                    from: "bottom",
+                    align: "right"
+                },
+            });
+            $('#id_crop_logo_button span').text('')
+        })
+
+        header_set_button.on('click', function() {
+            $('#id_header_x').val(header_data.x)
+            $('#id_header_y').val(header_data.y)
+            $('#id_header_w').val(header_data.width)
+            $('#id_header_h').val(header_data.height)
+            $.notify({
+                icon: 'fas fa-bell',
+                message: '<span class="ml-2">Company header cropped!</span>' 
+            },{
+                type: 'primary',
+                placement: {
+                    from: "bottom",
+                    align: "right"
+                },
+            });
+            $('#id_crop_header_button span').text('')
+        })
+        
+    })
+    
+</script>
+<script>
+    $(document).ready(function(){ 
+        let other_industry_checkbox = $('#id_other_industry_checkbox')
+
+        // Activate Choices.js
+        const industry_choices = new Choices($('#id_industry')[0], {
+            placeholder: true,
+            placeholderValue: 'Search Industry',
+            searchFloor: 2,
+            searchResultLimit: 6,
+            maxItemCount: 4,
+            delimiter: ',',
+            editItems: false,
+            removeItemButton: true,
+            loadingText: 'Loading...',
+            noResultsText: 'Nothing to see here...',
+            noChoicesText: 'No more industries to choose from',
+        });
+
+        industry_array = "{{ object.industry | escapejs }}".split("|")
+        for (let i = 0; i < industry_array.length; i++) {
+            industry_choices.setChoiceByValue(industry_array[i]);
+        }
+
+        $('#id_submit_button').on('click', function() {
+            industry_count = $('#id_industry').val().length
+            if (industry_count <= 0) {
+                $.notify({
+                    icon: 'fas fa-exclamation-triangle',
+                    message: '<span class="ml-2">Please key in at least 1 industry</span>' 
+                },{
+                    type: 'warning',
+                    placement: {
+                        from: "bottom",
+                        align: "right"
+                    },
+                });
+            }
+        })
+
+        if (other_industry_checkbox.prop('checked') == true) {
+            $('#id_industry').parent().parent().fadeOut(0)
+            $('#id_other_industry').fadeIn('fast')
+        }
+
+        other_industry_checkbox.on('change', function() {
+            let state = other_industry_checkbox.prop('checked')
+            if (state == true) {
+                $('#id_industry').parent().parent().fadeOut(0)
+                $('#id_other_industry').fadeIn('fast')
+                $('#id_other_industry').focus()
+                industry_choices.setChoiceByValue('Other')
+            } else {
+                $('#id_industry').parent().parent().fadeIn(0)
+                $('#id_other_industry').fadeOut(0)
+                industry_choices.removeActiveItemsByValue('Other');
+            }
+        })
+        
+    });
+</script>
+
+{% endblock page_js %}
